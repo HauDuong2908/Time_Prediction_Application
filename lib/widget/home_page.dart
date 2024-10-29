@@ -1,13 +1,11 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first
-
 import 'package:flutter/material.dart';
-
-import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 
 import 'package:weather_app/Models/constants.dart';
 
 import 'package:weather_app/Provider/connect_api.dart';
+import 'package:weather_app/widget/Home_Page/Home_Page_Ui.dart';
 
 import 'weather_item.dart';
 
@@ -109,201 +107,139 @@ class _HomePage extends State<HomePage> {
       ),
       body: Container(
         // padding: const EdgeInsets.only(left: 20, right: 20, bottom: 20),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            SizedBox(
-                height: 80,
-                child: ListView.builder(
-                    scrollDirection: Axis.horizontal,
-                    itemCount: weatherProvider.consolidateWeatherList.length,
-                    itemBuilder: (BuildContext context, int index) {
-                      String today =
-                          DateFormat('yyyy-MM-dd').format(DateTime.now());
-                      final selectedDay = weatherProvider
-                          .consolidateWeatherList[index]['datetime'];
-
-                      var parseDate = DateTime.parse(weatherProvider
-                          .consolidateWeatherList[index]['datetime']);
-                      var newDate =
-                          DateFormat('dd/MM').format(parseDate).substring(0, 5);
-                      var newDate1 =
-                          DateFormat('EEE').format(parseDate).substring(0, 3);
-
-                      return Container(
-                        // padding: const EdgeInsets.symmetric(vertical: 30),
-                        // margin: const EdgeInsets.only(bottom: 80, top: 10),
-                        width: 80,
-
-                        decoration: BoxDecoration(
-                            gradient: selectedDay == today
-                                ? myConstants.myGradient
-                                : null,
-                            color: selectedDay != today
-                                ? const Color.fromARGB(255, 9, 51, 167)
-                                : null,
-                            boxShadow: [
-                              BoxShadow(
-                                offset: const Offset(0, 1),
-                                blurRadius: 5,
-                                color: selectedDay == today
-                                    ? myConstants.primaryColor
-                                    : const Color.fromARGB(137, 73, 65, 65)
-                                        .withOpacity(.2),
-                              ),
-                            ]),
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.center,
+        width: MediaQuery.of(context).size.width,
+        child: SingleChildScrollView(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              SizedBox(
+                  height: 60,
+                  child: listDateTime(weatherProvider, myConstants)),
+              // Text(
+              //   weatherProvider.location,
+              //   style: const TextStyle(
+              //     fontWeight: FontWeight.bold,
+              //     fontSize: 30.0,
+              //   ),
+              // ),
+              // Text(
+              //   weatherProvider.currentDate,
+              //   style: const TextStyle(
+              //     color: Colors.grey,
+              //     fontSize: 16.0,
+              //   ),
+              // ),
+              const SizedBox(
+                height: 20,
+              ),
+              Container(
+                child: Center(
+                  child: weatherProvider.imageUrl == ''
+                      ? const Text('')
+                      : Image.asset(
+                          'assets/${weatherProvider.imageUrl}.png',
+                          width: 150,
+                        ),
+                ),
+                // child: ,
+              ),
+              Container(
+                width: size.width,
+                height: 200,
+                child: Stack(
+                  clipBehavior: Clip.none,
+                  children: [
+                    // Positioned(
+                    //   top: -40,
+                    //   left: 20,
+                    //   child: weatherProvider.imageUrl == ''
+                    //       ? const Text('')
+                    //       : Image.asset(
+                    //           'assets/${weatherProvider.imageUrl}.png',
+                    //           width: 150,
+                    //         ),
+                    // ),
+                    Positioned(
+                      bottom: 20,
+                      left: 20,
+                      child: Text(
+                        weatherProvider.weatherStateName,
+                        style: const TextStyle(
+                          color: Colors.blue,
+                          fontSize: 20,
+                        ),
+                      ),
+                    ),
+                    Positioned(
+                        top: 20,
+                        right: 20,
+                        child: Row(
+                          crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            Text(
-                              newDate1,
-                              style: TextStyle(
-                                fontSize: 17,
-                                color: selectedDay == today
-                                    ? Colors.white
-                                    : myConstants.primaryColor,
-                                fontWeight: FontWeight.w500,
+                            Padding(
+                              padding: EdgeInsets.only(top: 4.8),
+                              child: Text(
+                                weatherProvider.temperature.toString(),
+                                style: TextStyle(
+                                  fontSize: 80,
+                                  fontWeight: FontWeight.bold,
+                                  foreground: Paint()..shader = linearGradient,
+                                ),
                               ),
                             ),
                             Text(
-                              newDate,
+                              '0',
                               style: TextStyle(
-                                fontSize: 17,
-                                color: selectedDay == today
-                                    ? Colors.white
-                                    : myConstants.primaryColor,
-                                fontWeight: FontWeight.w500,
+                                fontSize: 40,
+                                fontWeight: FontWeight.bold,
+                                foreground: Paint()..shader = linearGradient,
                               ),
-                            )
-                          ],
-                        ),
-                      );
-                    })),
-            Text(
-              weatherProvider.location,
-              style: const TextStyle(
-                fontWeight: FontWeight.bold,
-                fontSize: 25.0,
-              ),
-            ),
-            Text(
-              weatherProvider.currentDate,
-              style: const TextStyle(
-                color: Colors.grey,
-                fontSize: 16.0,
-              ),
-            ),
-            const SizedBox(
-              height: 5,
-            ),
-            Container(
-              width: size.width,
-              height: 200,
-              decoration: BoxDecoration(
-                color: myConstants.primaryColor,
-                borderRadius: BorderRadius.circular(15),
-                boxShadow: [
-                  BoxShadow(
-                    color: myConstants.primaryColor.withOpacity(.5),
-                    offset: const Offset(0, 25),
-                    blurRadius: 10,
-                    spreadRadius: -12,
-                  )
-                ],
-              ),
-              child: Stack(
-                clipBehavior: Clip.none,
-                children: [
-                  Positioned(
-                    top: -40,
-                    left: 20,
-                    child: weatherProvider.imageUrl == ''
-                        ? const Text('')
-                        : Image.asset(
-                            'assets/${weatherProvider.imageUrl}.png',
-                            width: 150,
-                          ),
-                  ),
-                  Positioned(
-                    bottom: 20,
-                    left: 20,
-                    child: Text(
-                      weatherProvider.weatherStateName,
-                      style: const TextStyle(
-                        color: Colors.white,
-                        fontSize: 20,
-                      ),
-                    ),
-                  ),
-                  Positioned(
-                      top: 20,
-                      right: 20,
-                      child: Row(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Padding(
-                            padding: EdgeInsets.only(top: 4.8),
-                            child: Text(
-                              weatherProvider.temperature.toString(),
+                            ),
+                            Text(
+                              'C',
                               style: TextStyle(
                                 fontSize: 80,
                                 fontWeight: FontWeight.bold,
                                 foreground: Paint()..shader = linearGradient,
                               ),
-                            ),
-                          ),
-                          Text(
-                            '0',
-                            style: TextStyle(
-                              fontSize: 40,
-                              fontWeight: FontWeight.bold,
-                              foreground: Paint()..shader = linearGradient,
-                            ),
-                          ),
-                          Text(
-                            'C',
-                            style: TextStyle(
-                              fontSize: 80,
-                              fontWeight: FontWeight.bold,
-                              foreground: Paint()..shader = linearGradient,
-                            ),
-                          )
-                        ],
-                      ))
-                ],
+                            )
+                          ],
+                        ))
+                  ],
+                ),
               ),
-            ),
-            const SizedBox(
-              height: 10,
-            ),
-            Container(
-              padding: const EdgeInsets.symmetric(horizontal: 40),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  weather_items(
-                    value: weatherProvider.winSpeed,
-                    text: 'Win Speed',
-                    unit: 'km/h',
-                    imageUrl: 'assets/windspeed.png',
-                  ),
-                  weather_items(
-                    value: weatherProvider.humidity,
-                    text: 'Humidity',
-                    unit: 'C°',
-                    imageUrl: 'assets/humidity.png',
-                  ),
-                  weather_items(
-                    value: weatherProvider.maxTemp,
-                    text: 'Max Temp',
-                    unit: 'C°',
-                    imageUrl: 'assets/max-temp.png',
-                  ),
-                ],
+              const SizedBox(
+                height: 10,
               ),
-            ),
-            const SizedBox(height: 10),
-          ],
+              Container(
+                padding: const EdgeInsets.symmetric(horizontal: 40),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    weather_items(
+                      value: weatherProvider.winSpeed,
+                      text: 'Win Speed',
+                      unit: 'km/h',
+                      imageUrl: 'assets/windspeed.png',
+                    ),
+                    weather_items(
+                      value: weatherProvider.humidity,
+                      text: 'Humidity',
+                      unit: 'C°',
+                      imageUrl: 'assets/humidity.png',
+                    ),
+                    weather_items(
+                      value: weatherProvider.maxTemp,
+                      text: 'Max Temp',
+                      unit: 'C°',
+                      imageUrl: 'assets/max-temp.png',
+                    ),
+                  ],
+                ),
+              ),
+              const SizedBox(height: 10),
+            ],
+          ),
         ),
       ),
     );
