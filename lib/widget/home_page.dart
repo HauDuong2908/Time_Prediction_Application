@@ -21,16 +21,21 @@ class _HomePage extends State<HomePage> {
   @override
   void initState() {
     super.initState();
-
-    // Gọi hàm để lấy dữ liệu vị trí và thời tiết
     final weatherProvider =
         Provider.of<WeatherProvider>(context, listen: false);
+
+    // if (weatherProvider.selectedCities.isEmpty) {
+    //   WidgetsBinding.instance.addPostFrameCallback((_) {
+    //     Navigator.pop(context);
+    //   });
+    //   return;
+    // }
+
     if (weatherProvider.cities.isNotEmpty) {
       weatherProvider.fetchLocation(weatherProvider.cities[0]);
       weatherProvider.fetchWeatherData(weatherProvider.cities[0]);
     }
 
-    // Thêm các thành phố đã chọn vào danh sách cities
     for (int i = 0; i < weatherProvider.selectedCities.length; i++) {
       weatherProvider.cities.add(weatherProvider.selectedCities[i].city);
     }
@@ -99,203 +104,212 @@ class _HomePage extends State<HomePage> {
                     ),
                   ),
                 ],
-              )
+              ),
             ],
           ),
         ),
       ),
       body: Container(
         padding: const EdgeInsets.all(20),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Expanded(
+        child: SingleChildScrollView(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              SizedBox(
+                height: 120,
                 child: ListView.builder(
-                    scrollDirection: Axis.horizontal,
-                    itemCount: weatherProvider.consolidateWeatherList.length,
-                    itemBuilder: (BuildContext context, int index) {
-                      String today = DateTime.now().toString().substring(0, 10);
-                      final selectedDay = weatherProvider
-                          .consolidateWeatherList[index]['datetime'];
+                  scrollDirection: Axis.horizontal,
+                  itemCount: weatherProvider.consolidateWeatherList.length,
+                  itemBuilder: (BuildContext context, int index) {
+                    String today = DateTime.now().toString().substring(0, 10);
+                    final selectedDay = weatherProvider
+                        .consolidateWeatherList[index]['datetime'];
 
-                      var parseDate = DateTime.parse(weatherProvider
-                          .consolidateWeatherList[index]['datetime']);
-                      var newDate =
-                          DateFormat('dd/MM').format(parseDate).substring(0, 5);
-                      var newDate1 =
-                          DateFormat('EEE').format(parseDate).substring(0, 3);
+                    var parseDate = DateTime.parse(weatherProvider
+                        .consolidateWeatherList[index]['datetime']);
+                    var newDate =
+                        DateFormat('dd/MM').format(parseDate).substring(0, 5);
+                    var newDate1 =
+                        DateFormat('EEE').format(parseDate).substring(0, 3);
 
-                      return Container(
-                        padding: const EdgeInsets.symmetric(vertical: 30),
-                        margin: const EdgeInsets.only(bottom: 80, top: 10),
-                        width: 100,
-                        decoration: BoxDecoration(
-                            color: selectedDay == today
-                                ? myConstants.primaryColor
-                                : Colors.white,
-                            borderRadius:
-                                const BorderRadius.all(Radius.circular(10)),
-                            boxShadow: [
-                              BoxShadow(
-                                offset: const Offset(0, 1),
-                                blurRadius: 5,
-                                color: selectedDay == today
-                                    ? myConstants.primaryColor
-                                    : Colors.black54.withOpacity(.2),
+                    return Column(
+                      children: [
+                        Container(
+                          padding: const EdgeInsets.symmetric(vertical: 20),
+                          margin: const EdgeInsets.only(right: 20, top: 10),
+                          width: 80,
+                          decoration: BoxDecoration(
+                              color: selectedDay == today
+                                  ? myConstants.primaryColor
+                                  : Colors.white,
+                              borderRadius:
+                                  const BorderRadius.all(Radius.circular(10)),
+                              boxShadow: [
+                                BoxShadow(
+                                  offset: const Offset(0, 1),
+                                  blurRadius: 5,
+                                  color: selectedDay == today
+                                      ? myConstants.primaryColor
+                                      : Colors.black54.withOpacity(.2),
+                                ),
+                              ]),
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Text(
+                                newDate1,
+                                style: TextStyle(
+                                  fontSize: 17,
+                                  color: selectedDay == today
+                                      ? Colors.white
+                                      : myConstants.primaryColor,
+                                  fontWeight: FontWeight.w500,
+                                ),
                               ),
-                            ]),
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              Text(
+                                newDate,
+                                style: TextStyle(
+                                  fontSize: 17,
+                                  color: selectedDay == today
+                                      ? Colors.white
+                                      : myConstants.primaryColor,
+                                  fontWeight: FontWeight.w500,
+                                ),
+                              )
+                            ],
+                          ),
+                        ),
+                      ],
+                    );
+                  },
+                ),
+              ),
+              Text(
+                weatherProvider.location,
+                style: const TextStyle(
+                  fontWeight: FontWeight.bold,
+                  fontSize: 25.0,
+                ),
+              ),
+              Text(
+                weatherProvider.currentDate,
+                style: const TextStyle(
+                  color: Colors.grey,
+                  fontSize: 16.0,
+                ),
+              ),
+              const SizedBox(
+                height: 20,
+              ),
+              Container(
+                width: size.width,
+                height: 200,
+                decoration: BoxDecoration(
+                  color: myConstants.primaryColor,
+                  borderRadius: BorderRadius.circular(15),
+                  boxShadow: [
+                    BoxShadow(
+                      color: myConstants.primaryColor.withOpacity(.5),
+                      offset: const Offset(0, 25),
+                      blurRadius: 10,
+                      spreadRadius: -12,
+                    )
+                  ],
+                ),
+                child: Stack(
+                  clipBehavior: Clip.none,
+                  children: [
+                    Positioned(
+                      top: -40,
+                      left: 20,
+                      child: weatherProvider.imageUrl == ''
+                          ? const Text('')
+                          : Image.asset(
+                              'assets/${weatherProvider.imageUrl}.png',
+                              width: 150,
+                            ),
+                    ),
+                    Positioned(
+                      bottom: 20,
+                      left: 20,
+                      child: Text(
+                        weatherProvider.weatherStateName,
+                        style: const TextStyle(
+                          color: Colors.white,
+                          fontSize: 20,
+                        ),
+                      ),
+                    ),
+                    Positioned(
+                        top: 20,
+                        right: 20,
+                        child: Row(
+                          crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            Text(
-                              newDate,
-                              style: TextStyle(
-                                fontSize: 17,
-                                color: selectedDay == today
-                                    ? Colors.white
-                                    : myConstants.primaryColor,
-                                fontWeight: FontWeight.w500,
+                            Padding(
+                              padding: EdgeInsets.only(top: 4.8),
+                              child: Text(
+                                weatherProvider.temperature.toString(),
+                                style: TextStyle(
+                                  fontSize: 80,
+                                  fontWeight: FontWeight.bold,
+                                  foreground: Paint()..shader = linearGradient,
+                                ),
                               ),
                             ),
                             Text(
-                              newDate1,
+                              '0',
                               style: TextStyle(
-                                fontSize: 17,
-                                color: selectedDay == today
-                                    ? Colors.white
-                                    : myConstants.primaryColor,
-                                fontWeight: FontWeight.w500,
+                                fontSize: 40,
+                                fontWeight: FontWeight.bold,
+                                foreground: Paint()..shader = linearGradient,
                               ),
-                            )
-                          ],
-                        ),
-                      );
-                    })),
-            Text(
-              weatherProvider.location,
-              style: const TextStyle(
-                fontWeight: FontWeight.bold,
-                fontSize: 25.0,
-              ),
-            ),
-            Text(
-              weatherProvider.currentDate,
-              style: const TextStyle(
-                color: Colors.grey,
-                fontSize: 16.0,
-              ),
-            ),
-            const SizedBox(
-              height: 5,
-            ),
-            Container(
-              width: size.width,
-              height: 200,
-              decoration: BoxDecoration(
-                color: myConstants.primaryColor,
-                borderRadius: BorderRadius.circular(15),
-                boxShadow: [
-                  BoxShadow(
-                    color: myConstants.primaryColor.withOpacity(.5),
-                    offset: const Offset(0, 25),
-                    blurRadius: 10,
-                    spreadRadius: -12,
-                  )
-                ],
-              ),
-              child: Stack(
-                clipBehavior: Clip.none,
-                children: [
-                  Positioned(
-                    top: -40,
-                    left: 20,
-                    child: weatherProvider.imageUrl == ''
-                        ? const Text('')
-                        : Image.asset(
-                            'assets/${weatherProvider.imageUrl}.png',
-                            width: 150,
-                          ),
-                  ),
-                  Positioned(
-                    bottom: 20,
-                    left: 20,
-                    child: Text(
-                      weatherProvider.weatherStateName,
-                      style: const TextStyle(
-                        color: Colors.white,
-                        fontSize: 20,
-                      ),
-                    ),
-                  ),
-                  Positioned(
-                      top: 20,
-                      right: 20,
-                      child: Row(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Padding(
-                            padding: EdgeInsets.only(top: 4.8),
-                            child: Text(
-                              weatherProvider.temperature.toString(),
+                            ),
+                            Text(
+                              'C',
                               style: TextStyle(
                                 fontSize: 80,
                                 fontWeight: FontWeight.bold,
                                 foreground: Paint()..shader = linearGradient,
                               ),
-                            ),
-                          ),
-                          Text(
-                            '0',
-                            style: TextStyle(
-                              fontSize: 40,
-                              fontWeight: FontWeight.bold,
-                              foreground: Paint()..shader = linearGradient,
-                            ),
-                          ),
-                          Text(
-                            'C',
-                            style: TextStyle(
-                              fontSize: 80,
-                              fontWeight: FontWeight.bold,
-                              foreground: Paint()..shader = linearGradient,
-                            ),
-                          )
-                        ],
-                      ))
-                ],
+                            )
+                          ],
+                        ))
+                  ],
+                ),
               ),
-            ),
-            const SizedBox(
-              height: 10,
-            ),
-            Container(
-              padding: const EdgeInsets.symmetric(horizontal: 40),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  weather_items(
-                    value: weatherProvider.winSpeed,
-                    text: 'Win Speed',
-                    unit: 'km/h',
-                    imageUrl: 'assets/windspeed.png',
-                  ),
-                  weather_items(
-                    value: weatherProvider.humidity,
-                    text: 'Humidity',
-                    unit: 'C°',
-                    imageUrl: 'assets/humidity.png',
-                  ),
-                  weather_items(
-                    value: weatherProvider.maxTemp,
-                    text: 'Max Temp',
-                    unit: 'C°',
-                    imageUrl: 'assets/max-temp.png',
-                  ),
-                ],
+              const SizedBox(
+                height: 10,
               ),
-            ),
-            const SizedBox(height: 10),
-          ],
+              Container(
+                padding: const EdgeInsets.symmetric(horizontal: 40),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    weather_items(
+                      value: weatherProvider.winSpeed,
+                      text: 'Win Speed',
+                      unit: 'km/h',
+                      imageUrl: 'assets/windspeed.png',
+                    ),
+                    weather_items(
+                      value: weatherProvider.humidity,
+                      text: 'Humidity',
+                      unit: 'C°',
+                      imageUrl: 'assets/humidity.png',
+                    ),
+                    weather_items(
+                      value: weatherProvider.maxTemp,
+                      text: 'Max Temp',
+                      unit: 'C°',
+                      imageUrl: 'assets/max-temp.png',
+                    ),
+                  ],
+                ),
+              ),
+              const SizedBox(height: 10),
+            ],
+          ),
         ),
       ),
     );
