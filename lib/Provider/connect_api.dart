@@ -23,7 +23,7 @@ class WeatherProvider extends ChangeNotifier {
   var currentDate = 'Loading...';
 
   // List
-  List<String> cities = ['Đà Nẵng'];
+  final List<String> cities = ['Đà Nẵng'];
   List consolidateWeatherList = [];
   List forecastDays = [];
 
@@ -47,30 +47,30 @@ class WeatherProvider extends ChangeNotifier {
         final result = json.decode(response.body);
         final consolidateWeather = result['days'];
 
-        if (consolidateWeather != null && consolidateWeather.isNotEmpty) {
-          for (int i = 0; i < 7; i++) {
-            consolidateWeather.add(consolidateWeather[i]);
-          }
-          temperature = consolidateWeather[0]['temp'].round();
-          weatherStateName = consolidateWeather[0]['conditions'];
-          maxTemp = consolidateWeather[0]['tempmax'].round();
-          humidity = consolidateWeather[0]['humidity'].round();
-          winSpeed = consolidateWeather[0]['windspeed'].round();
-
-          final myDate = DateTime.parse(consolidateWeather[0]['datetime']);
-          currentDate = DateFormat('E MMM dd, yyyy').format(myDate);
-
-          consolidateWeatherList = consolidateWeather.toSet().toList();
-
-          final listWeatherState = weatherStateName.split(',');
-          final listEnumState = listWeatherState
-              .map((e) => WeatherState.getEnumFromCode(e.trim()))
-              .toList();
-
-          imageUrl = listEnumState.first.image;
-
-          notifyListeners();
+        // if (consolidateWeather != null && consolidateWeather.isNotEmpty) {
+        for (int i = 0; i < 7; i++) {
+          consolidateWeather.add(consolidateWeather[i]);
         }
+        temperature = consolidateWeather[0]['temp'].round();
+        weatherStateName = consolidateWeather[0]['conditions'];
+        maxTemp = consolidateWeather[0]['tempmax'].round();
+        humidity = consolidateWeather[0]['humidity'].round();
+        winSpeed = consolidateWeather[0]['windspeed'].round();
+
+        final myDate = DateTime.parse(consolidateWeather[0]['datetime']);
+        currentDate = DateFormat('E MMM dd, yyyy').format(myDate);
+
+        consolidateWeatherList = consolidateWeather.toSet().toList();
+
+        final listWeatherState = weatherStateName.split(',');
+        final listEnumState = listWeatherState
+            .map((e) => WeatherState.getEnumFromCode(e.trim()))
+            .toList();
+
+        imageUrl = listEnumState.first.image;
+
+        notifyListeners();
+        // }
       }
     } catch (e) {
       errorMessage = "An error occurred: $e";

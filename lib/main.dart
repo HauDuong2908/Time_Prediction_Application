@@ -8,7 +8,7 @@ void main() {
     providers: [
       ChangeNotifierProvider(create: (_) => WeatherProvider()),
     ],
-    child: MyApp(),
+    child: const MyApp(),
   ));
 }
 
@@ -18,7 +18,7 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Weather App',
+      title: 'Weather App1',
       home: getStarted(),
       debugShowCheckedModeBanner: false,
     );

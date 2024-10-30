@@ -25,9 +25,9 @@ class District {
         isDefault: false),
     District(
         isSlected: false,
-        city: 'quảng nam',
+        city: 'Quảng Nam',
         country: 'Việt Nam',
-        isDefault: false)
+        isDefault: false),
   ];
 
   static List<District> getSelectedCities() {

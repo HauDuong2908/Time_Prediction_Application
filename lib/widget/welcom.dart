@@ -7,26 +7,70 @@ class Welcom extends StatefulWidget {
   const Welcom({super.key});
 
   @override
-  State<Welcom> createState() => _welcomState();
+  State<Welcom> createState() => _WelcomState();
 }
 
-class _welcomState extends State<Welcom> {
+class _WelcomState extends State<Welcom> {
+  final TextEditingController _searchController = TextEditingController();
+  List<District> cities = District.citiesList
+      .where((district) => district.isDefault == false)
+      .toList();
+  List<District> selectedCities = District.getSelectedCities();
+  Constants myConstants = Constants();
+
+  void _addCityByName(String cityName) {
+    final city = cities.firstWhere(
+      (district) => district.city.toLowerCase() == cityName.toLowerCase(),
+      orElse: () => District(
+          city: 'not found', isDefault: false, isSlected: false, country: ''),
+    );
+
+    if (city.city == 'not found') {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text("Không tìm thấy địa điểm")),
+      );
+    } else if (!selectedCities.contains(city)) {
+      setState(() {
+        city.isSlected = true;
+        selectedCities.add(city);
+      });
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
-    List<District> cities = District.citiesList
-        .where((district) => district.isDefault == false)
-        .toList();
-    List<District> selectedCities = District.getSelectedCities();
-
-    Constants myConstants = Constants();
-
     Size size = MediaQuery.of(context).size;
     return Scaffold(
       appBar: AppBar(
         backgroundColor: myConstants.primaryColor.withOpacity(.7),
         centerTitle: true,
-        title: Text(
-          '${selectedCities.length.toString()}Selected',
+        title: Row(
+          children: [
+            Expanded(
+              child: TextField(
+                controller: _searchController,
+                decoration: const InputDecoration(
+                  hintText: 'Nhập tên địa điểm...',
+                  border: InputBorder.none,
+                ),
+                onSubmitted: (value) {
+                  if (value.isNotEmpty) {
+                    _addCityByName(value);
+                    _searchController.clear();
+                  }
+                },
+              ),
+            ),
+            IconButton(
+              icon: const Icon(Icons.search),
+              onPressed: () {
+                if (_searchController.text.isNotEmpty) {
+                  _addCityByName(_searchController.text);
+                  _searchController.clear();
+                }
+              },
+            ),
+          ],
         ),
       ),
       body: ListView.builder(
@@ -56,10 +100,14 @@ class _welcomState extends State<Welcom> {
             child: Row(
               children: [
                 GestureDetector(
-                  //chèn ontap vào Icon tích dấu.
                   onTap: () {
                     setState(() {
                       cities[index].isSlected = !cities[index].isSlected;
+                      if (cities[index].isSlected) {
+                        selectedCities.add(cities[index]);
+                      } else {
+                        selectedCities.remove(cities[index]);
+                      }
                     });
                   },
                   child: Image.asset(
@@ -87,12 +135,34 @@ class _welcomState extends State<Welcom> {
         },
       ),
       floatingActionButton: FloatingActionButton(
-          backgroundColor: myConstants.primaryColor,
-          child: Icon(Icons.pin_drop),
-          onPressed: () {
+        backgroundColor: myConstants.primaryColor,
+        child: const Icon(Icons.pin_drop),
+        onPressed: () {
+          if (selectedCities.isEmpty) {
+            showDialog(
+              context: context,
+              builder: (context) => AlertDialog(
+                title: const Text('Thông báo'),
+                content:
+                    const Text('Vui lòng chọn địa điểm trước khi tiếp tục.'),
+                actions: [
+                  TextButton(
+                    onPressed: () {
+                      Navigator.pop(context); // Đóng dialog
+                    },
+                    child: const Text('OK'),
+                  ),
+                ],
+              ),
+            );
+          } else {
             Navigator.pushReplacement(
-                context, MaterialPageRoute(builder: (context) => HomePage()));
-          }),
+              context,
+              MaterialPageRoute(builder: (context) => HomePage()),
+            );
+          }
+        },
+      ),
     );
   }
 }
