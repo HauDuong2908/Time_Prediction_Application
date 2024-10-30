@@ -8,7 +8,7 @@ void main() {
     providers: [
       ChangeNotifierProvider(create: (_) => WeatherProvider()),
     ],
-    child: MyApp(),
+    child: const MyApp(),
   ));
 }
 
