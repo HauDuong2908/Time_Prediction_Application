@@ -149,16 +149,6 @@ class _HomePage extends State<HomePage> {
                 child: Stack(
                   clipBehavior: Clip.none,
                   children: [
-                    // Positioned(
-                    //   top: -40,
-                    //   left: 20,
-                    //   child: weatherProvider.imageUrl == ''
-                    //       ? const Text('')
-                    //       : Image.asset(
-                    //           'assets/${weatherProvider.imageUrl}.png',
-                    //           width: 150,
-                    //         ),
-                    // ),
                     Positioned(
                       bottom: 20,
                       left: 20,

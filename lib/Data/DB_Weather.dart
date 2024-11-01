@@ -1,44 +1,49 @@
 import 'dart:async';
-
+import 'dart:convert';
+import 'dart:io';
 import 'package:flutter/widgets.dart';
 import 'package:path/path.dart';
+import 'package:path_provider/path_provider.dart';
 import 'package:sqflite/sqflite.dart';
 
-class db {
-  final int id;
-  final String weatherStateName;
-  final int temperature;
-  final int maxTemp;
-  final int humidity;
-  final int winSpeed;
+class DatabaseWeather {
+  static Database? _db;
+  static final DatabaseWeather intance = DatabaseWeather._constructor();
 
-  db(this.id, this.weatherStateName, this.temperature, this.maxTemp,
-      this.humidity, this.winSpeed);
+  final String _tableName = 'WeatherDatabase';
+  final String id = 'id';
+  final String weatherStateName = 'weatherStateName';
+  final String temperature = 'temperature';
+  final String maxTemp = 'maxTemp';
+  final String humidity = 'humidity';
+  final String winSpeed = 'winSpeed';
+  final String dateTime = 'datetime';
 
-  void db_weather() async {
-    final database = openDatabase(
-      join(await getDatabasesPath(), 'Date_Time.db'),
+  DatabaseWeather._constructor();
+
+  Future<Database> get database async {
+    if (_db != null) return _db!;
+    _db = await getDatabase();
+    return _db!;
+  }
+
+  Future<Database> getDatabase() async {
+    final databaseDirPath = await getDatabasesPath();
+    final databasePath = join(databaseDirPath, "DATE_TIME.db");
+    final database = await openDatabase(
+      databasePath,
       onCreate: (db, version) {
-        return db.execute(
-            'CREATE TABLE Weather(id INTEGER PRIMARY KEY, weatherStateName TEXT, temperature INTEGER, maxTemp INTEGER, humidity INTEGER, winSpeed INTEGER)');
+        db.execute("CREATE TABLE $_tableName("
+            " id INTEGER PRIMARY KEY,"
+            "$weatherStateName TEXT, "
+            "$temperature INTEGER, "
+            " $maxTemp INTEGER, "
+            " $humidity INTEGER,"
+            " $winSpeed INTEGER,"
+            " $dateTime DATETIME"
+            ")");
       },
-      version: 1,
     );
-  }
-
-  Map<String, Object?> toMap() {
-    return {
-      'id': id,
-      'weatherStateName': weatherStateName,
-      'temperature': temperature,
-      'maxTemp': maxTemp,
-      'humidity': humidity,
-      'winSpeed': winSpeed,
-    };
-  }
-
-  @override
-  String toString() {
-    return 'Dog{id: $id, weatherStateName: $weatherStateName, temperature: $temperature, maxTemp: $maxTemp, humidity:$humidity, winSpeed:$winSpeed}';
+    return database;
   }
 }
