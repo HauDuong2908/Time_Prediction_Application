@@ -38,10 +38,10 @@ class WeatherProvider extends ChangeNotifier {
 
   Future<Database> _initDatabase() async {
     return openDatabase(
-      join(await getDatabasesPath(), 'Date_Time.db'),
+      join(await getDatabasesPath(), 'DATE_TIME.db'),
       onCreate: (db, version) {
         return db.execute(
-          'CREATE TABLE Weather(id INTEGER PRIMARY KEY, weatherStateName TEXT, temperature INTEGER, maxTemp INTEGER, humidity INTEGER, winSpeed INTEGER)',
+          'CREATE TABLE WeatherTime(id INTEGER PRIMARY KEY, weatherStateName TEXT, temperature INTEGER, maxTemp INTEGER, humidity INTEGER, winSpeed INTEGER, dateTime DATETIME)',
         );
       },
       version: 1,
@@ -53,7 +53,7 @@ class WeatherProvider extends ChangeNotifier {
     await fetchWeatherData(location);
   }
 
-  Future<void> fetchWeatherData(String location) async {
+  Future<List> fetchWeatherData(String location) async {
     try {
       final Uri apiUrl = Uri.parse(
           '$baseUrl${Uri.encodeFull(location)}?unitGroup=metric&key=$apiKey&contentType=json');
@@ -63,20 +63,38 @@ class WeatherProvider extends ChangeNotifier {
       if (response.statusCode == 200) {
         final result = json.decode(response.body);
         final consolidateWeather = result['days'];
-        final consolidateWeatherlists = [];
+        final List<Map<String, dynamic>> consolidateWeatherlists = [];
         final DateTime now = DateTime.now();
+        final db = await _initDatabase();
 
         int weekday = now.weekday;
         int future = 7 - weekday;
         int past = 7 - future;
 
-        // if (consolidateWeather != null && consolidateWeather.isNotEmpty) {
-        for (int i = 0; i < future; i++) {
-          consolidateWeatherlists.add(consolidateWeather[i]);
+        for (int i = 0; i < future + 7; i++) {
+          await db.insert(
+            'WeatherTime',
+            {
+              'datetime': consolidateWeather[i]['datetime'],
+              'weatherStateName': consolidateWeather[i]['conditions'],
+              'temperature': consolidateWeather[i]['temp'].round(),
+              'maxTemp': consolidateWeather[i]['tempmax'].round(),
+              'humidity': consolidateWeather[i]['humidity'].round(),
+              'winSpeed': consolidateWeather[i]['windspeed'].round(),
+            },
+            conflictAlgorithm: ConflictAlgorithm.replace,
+          );
         }
-        temperature = consolidateWeatherlists[0]['temp'].round();
-        weatherStateName = consolidateWeatherlists[0]['conditions'];
-        maxTemp = consolidateWeatherlists[0]['tempmax'].round();
+
+        final List<Map<String, dynamic>> weatherData =
+            await db.query('WeatherTime');
+
+        for (int i = 0; i < weatherData.length; i++) {
+          consolidateWeatherlists.add(weatherData[i]);
+        }
+        temperature = consolidateWeatherlists[0]['temperature'].round();
+        weatherStateName = consolidateWeatherlists[0]['weatherStateName'];
+        maxTemp = consolidateWeatherlists[0]['maxTemp'].round();
         humidity = consolidateWeatherlists[0]['humidity'].round();
         winSpeed = consolidateWeatherlists[0]['windspeed'].round();
 
@@ -92,12 +110,9 @@ class WeatherProvider extends ChangeNotifier {
 
         imageUrl = listEnumState.first.image;
 
-        final db = await _initDatabase();
-
         // Kiểm tra số lượng bản ghi hiện tại
         final countQuery =
-            await db.rawQuery('SELECT COUNT(*) as count FROM Weather');
-        print(countQuery);
+            await db.rawQuery('SELECT COUNT(*) as count FROM WeatherTime');
         int recordCount = Sqflite.firstIntValue(countQuery) ?? 0;
 
         // Nếu số lượng bản ghi đạt tối đa, xóa bản ghi cũ nhất
@@ -105,36 +120,24 @@ class WeatherProvider extends ChangeNotifier {
           String lastDate = DateFormat('yyyy-MM-dd')
               .format(now.add(Duration(days: 7 + (past))));
           await db.delete(
-            'Weather',
+            'WeatherTime',
             where: 'datetime <= ?',
             whereArgs: [lastDate],
           );
         }
-
-        // Thêm từng ngày dự báo vào cơ sở dữ liệu
-        for (var day in consolidateWeatherList) {
-          await db.insert(
-            'Weather',
-            {
-              'datetime': day['datetime'],
-              'weatherStateName': day['conditions'],
-              'temperature': day['temp'].round(),
-              'maxTemp': day['tempmax'].round(),
-              'humidity': day['humidity'].round(),
-              'winSpeed': day['windspeed'].round(),
-            },
-            conflictAlgorithm: ConflictAlgorithm.replace,
-          );
-        }
         isSaved = true; // Cập nhật trạng thái đã lưu
         notifyListeners();
-        // }
+
+        return consolidateWeatherlists;
       } else {
         errorMessage = "Không thể lấy dữ liệu thời tiết.";
+        notifyListeners();
+        return [];
       }
     } catch (e) {
       errorMessage = "An error occurred: $e";
       notifyListeners();
+      return [];
     }
   }
 }
