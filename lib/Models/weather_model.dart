@@ -1,4 +1,3 @@
-// weather
 import 'package:intl/intl.dart';
 
 class Weather {
@@ -12,10 +11,11 @@ class Weather {
 
   factory Weather.fromJson(Map<String, dynamic> json) {
     return Weather(
-      locationName: json['address'],
-      days: (json['day'] as List)
-          .map((dayJson) => DailyWeather.fromJson(dayJson))
-          .toList(),
+      locationName: json['address'] ?? 'Unknown Location',
+      days: (json['days'] as List<dynamic>?)
+              ?.map((dayJson) => DailyWeather.fromJson(dayJson))
+              .toList() ??
+          [],
     );
   }
 }
@@ -23,30 +23,31 @@ class Weather {
 //weather daily
 class DailyWeather {
   String datetime;
-  String weatherStateName = 'Loading...';
+  String weatherStateName;
   int temperature;
   int maxTemp;
   int humidity;
   int winSpeed;
 
-  DailyWeather(
-      {required this.weatherStateName,
-      required this.temperature,
-      required this.maxTemp,
-      required this.humidity,
-      required this.winSpeed,
-      required this.datetime});
+  DailyWeather({
+    required this.weatherStateName,
+    required this.temperature,
+    required this.maxTemp,
+    required this.humidity,
+    required this.winSpeed,
+    required this.datetime,
+  });
 
   factory DailyWeather.fromJson(Map<String, dynamic> json) {
-    final myDate = DateTime.parse(json[0]['datetime']);
+    final myDate = DateTime.tryParse(json['datetime'] ?? '') ?? DateTime.now();
     final currentDate = DateFormat('E MMM dd, yyyy').format(myDate);
 
     return DailyWeather(
-      weatherStateName: json['conditions'] ?? '',
-      temperature: json['temp'] as int,
-      maxTemp: json['tempmax'] as int,
-      humidity: json['humidity'] as int,
-      winSpeed: json['windspeed'] as int,
+      weatherStateName: json['conditions'] ?? 'Unknown',
+      temperature: (json['temp'] ?? 0).toInt(),
+      maxTemp: (json['tempmax'] ?? 0).toInt(),
+      humidity: (json['humidity'] ?? 0).toInt(),
+      winSpeed: (json['windspeed'] ?? 0).toInt(),
       datetime: currentDate,
     );
   }
