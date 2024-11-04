@@ -4,7 +4,8 @@ import 'package:provider/provider.dart';
 
 import 'package:weather_app/Models/constants.dart';
 
-import 'package:weather_app/Provider/connect_api.dart';
+// import 'package:weather_app/Provider/connect_api.dart';
+import 'package:weather_app/Provider/weather_provider.dart';
 import 'package:weather_app/widget/Home_Page/Home_Page_Ui.dart';
 
 import 'weather_item.dart';
@@ -21,11 +22,10 @@ class _HomePage extends State<HomePage> {
     super.initState();
 
     // Gọi hàm để lấy dữ liệu vị trí và thời tiết
-    final weatherProvider =
-        Provider.of<WeatherProvider>(context, listen: false);
+    final weatherProvider = Provider.of<WeatherPro>(context, listen: false);
     if (weatherProvider.cities.isNotEmpty) {
-      weatherProvider.fetchLocation(weatherProvider.cities[0]);
-      weatherProvider.fetchWeatherData(weatherProvider.cities[0]);
+      weatherProvider.loadWeather(weatherProvider.cities[0]);
+      // weatherProvider.loadWeather(weatherProvider.cities[0]);
     }
 
     // Thêm các thành phố đã chọn vào danh sách cities
@@ -44,7 +44,7 @@ class _HomePage extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
     Constants myConstants = Constants();
-    final weatherProvider = Provider.of<WeatherProvider>(context);
+    final weatherProvider = Provider.of<WeatherPro>(context);
     Size size = MediaQuery.of(context).size;
 
     return Scaffold(
@@ -95,7 +95,7 @@ class _HomePage extends State<HomePage> {
                       }).toList(),
                       onChanged: (String? newValue) {
                         weatherProvider.location = newValue!;
-                        weatherProvider.fetchLocation(newValue);
+                        weatherProvider.loadWeather(newValue);
                       },
                     ),
                   ),
@@ -114,21 +114,24 @@ class _HomePage extends State<HomePage> {
             children: [
               SizedBox(
                   height: 60,
-                  child: listDateTime(weatherProvider, myConstants)),
-              // Text(
-              //   weatherProvider.location,
-              //   style: const TextStyle(
-              //     fontWeight: FontWeight.bold,
-              //     fontSize: 30.0,
-              //   ),
-              // ),
-              // Text(
-              //   weatherProvider.currentDate,
-              //   style: const TextStyle(
-              //     color: Colors.grey,
-              //     fontSize: 16.0,
-              //   ),
-              // ),
+                  child: listDateTime(
+                    weatherProvider,
+                    myConstants,
+                  )),
+              Text(
+                weatherProvider.location,
+                style: const TextStyle(
+                  fontWeight: FontWeight.bold,
+                  fontSize: 30.0,
+                ),
+              ),
+              Text(
+                weatherProvider.currentDates,
+                style: const TextStyle(
+                  color: Colors.grey,
+                  fontSize: 16.0,
+                ),
+              ),
               const SizedBox(
                 height: 20,
               ),
@@ -153,7 +156,7 @@ class _HomePage extends State<HomePage> {
                       bottom: 20,
                       left: 20,
                       child: Text(
-                        weatherProvider.weatherStateName,
+                        weatherProvider.weatherStateNames,
                         style: const TextStyle(
                           color: Colors.blue,
                           fontSize: 20,
@@ -169,7 +172,7 @@ class _HomePage extends State<HomePage> {
                             Padding(
                               padding: EdgeInsets.only(top: 4.8),
                               child: Text(
-                                weatherProvider.temperature.toString(),
+                                weatherProvider.temperatures.toString(),
                                 style: TextStyle(
                                   fontSize: 80,
                                   fontWeight: FontWeight.bold,
@@ -207,19 +210,19 @@ class _HomePage extends State<HomePage> {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     weather_items(
-                      value: weatherProvider.winSpeed,
+                      value: weatherProvider.winSpeeds,
                       text: 'Win Speed',
                       unit: 'km/h',
                       imageUrl: 'assets/windspeed.png',
                     ),
                     weather_items(
-                      value: weatherProvider.humidity,
+                      value: weatherProvider.humidities,
                       text: 'Humidity',
                       unit: 'C°',
                       imageUrl: 'assets/humidity.png',
                     ),
                     weather_items(
-                      value: weatherProvider.maxTemp,
+                      value: weatherProvider.maxTemps,
                       text: 'Max Temp',
                       unit: 'C°',
                       imageUrl: 'assets/max-temp.png',

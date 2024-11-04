@@ -4,21 +4,22 @@ import 'dart:convert';
 import 'package:weather_app/Models/weather_model.dart';
 
 class ApiService {
-  //Location
+  // Location
   String location = '';
   final List<String> cities = ['Đà Nẵng'];
   final selectedCities = District.getSelectedCities();
 
-  static String testProp = 'TEST';
-
-  //List Data
+  // List Data
   List consolidateWeatherList = [];
   List forecastDays = [];
 
-  //API
+  // API
   final String baseUrl =
       'https://weather.visualcrossing.com/VisualCrossingWebServices/rest/services/timeline/';
   final String apiKey = 'YCVZZSMMKNN59RN74H9VEQDH4';
+
+  // Getter cho consolidateWeatherList
+  List get data => consolidateWeatherList;
 
   Future<Weather?> fetchWeather(String location) async {
     final url = Uri.parse(
@@ -26,21 +27,11 @@ class ApiService {
     final response = await http.get(url);
 
     if (response.statusCode == 200) {
-      final result = jsonDecode(response.body);
-      final consolidateWeather = result;
-      final List<Map<String, dynamic>> dataList = [];
-      final DateTime now = DateTime.now();
-
-      int weekday = now.weekday;
-      int future = 7 - weekday;
-      // int past = 7 - future;
-
-      for (int i = 0; i < future + 7; i++) {
-        dataList.add(consolidateWeather[i]);
-      }
-      consolidateWeatherList = dataList.toSet().toList();
-      return Weather.fromJson(result);
+      final Map<String, dynamic> data = jsonDecode(response.body);
+      return Weather.fromJson(data);
+    } else {
+      print("Failed to load weather data. Status code: ${response.statusCode}");
+      return null;
     }
-    return null;
   }
 }
