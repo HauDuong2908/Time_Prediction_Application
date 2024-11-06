@@ -20,17 +20,12 @@ class _HomePage extends State<HomePage> {
   @override
   void initState() {
     super.initState();
-
-    // Gọi hàm để lấy dữ liệu vị trí và thời tiết
     final weatherProvider = Provider.of<WeatherPro>(context, listen: false);
     if (weatherProvider.cities.isNotEmpty) {
       weatherProvider.loadWeather(weatherProvider.cities[0]);
-      // weatherProvider.loadWeather(weatherProvider.cities[0]);
     }
-
-    // Thêm các thành phố đã chọn vào danh sách cities
-    for (int i = 0; i < weatherProvider.selectedCities.length; i++) {
-      weatherProvider.cities.add(weatherProvider.selectedCities[i].city);
+    for (var city in weatherProvider.selectedCities) {
+      weatherProvider.cities.add(city.city);
     }
   }
 
@@ -76,16 +71,13 @@ class _HomePage extends State<HomePage> {
                     'assets/pin.png',
                     width: 20,
                   ),
-                  const SizedBox(
-                    width: 4,
-                  ),
+                  const SizedBox(width: 4),
                   DropdownButtonHideUnderline(
                     child: DropdownButton<String>(
                       value: weatherProvider.cities
                               .contains(weatherProvider.location)
                           ? weatherProvider.location
-                          : weatherProvider.cities[
-                              0], // Đảm bảo value khớp với một giá trị hợp lệ
+                          : weatherProvider.cities[0],
                       icon: const Icon(Icons.keyboard_arrow_down),
                       items: weatherProvider.cities.map((String location) {
                         return DropdownMenuItem(
@@ -106,18 +98,16 @@ class _HomePage extends State<HomePage> {
         ),
       ),
       body: Container(
-        // padding: const EdgeInsets.only(left: 20, right: 20, bottom: 20),
-        width: MediaQuery.of(context).size.width,
+        width: size.width,
         child: SingleChildScrollView(
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               SizedBox(
-                  height: 60,
-                  child: listDateTime(
-                    weatherProvider,
-                    myConstants,
-                  )),
+                height: 60,
+                child: listDateTime(weatherProvider, myConstants),
+              ),
+              // Các widget hiển thị thông tin thời tiết khác
               Text(
                 weatherProvider.location,
                 style: const TextStyle(

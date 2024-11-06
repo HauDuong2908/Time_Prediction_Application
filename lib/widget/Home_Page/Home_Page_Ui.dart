@@ -51,46 +51,54 @@ ListView listDateTime(WeatherPro weatherProvider, Constants myConstants) {
           : DateFormat('EEE').format(parseDate).substring(0, 3);
       String newDate = DateFormat('dd/MM').format(parseDate).substring(0, 5);
 
-      return Container(
-        width: MediaQuery.of(context).size.width / 7,
-        decoration: BoxDecoration(
-          gradient: dayFormat == today ? myConstants.myGradient : null,
-          color:
-              dayFormat != today ? const Color.fromARGB(255, 9, 51, 167) : null,
-          boxShadow: [
-            BoxShadow(
-              offset: const Offset(0, 1),
-              blurRadius: 5,
-              color: dayFormat == today
-                  ? myConstants.primaryColor
-                  : const Color.fromARGB(136, 221, 215, 215).withOpacity(.2),
-            ),
-          ],
-        ),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Text(
-              dayName,
-              style: TextStyle(
-                fontSize: 17,
+      return GestureDetector(
+        onTap: () {
+          weatherProvider.selectDay(index);
+        },
+        child: Container(
+          width: MediaQuery.of(context).size.width / 7,
+          decoration: BoxDecoration(
+            gradient: weatherProvider.selectedDayIndex == index
+                ? myConstants.myGradient
+                : null,
+            color: dayFormat != today
+                ? const Color.fromARGB(255, 9, 51, 167)
+                : null,
+            boxShadow: [
+              BoxShadow(
+                offset: const Offset(0, 1),
+                blurRadius: 5,
                 color: dayFormat == today
-                    ? Colors.white
-                    : myConstants.primaryColor,
-                fontWeight: FontWeight.w500,
+                    ? const Color.fromARGB(255, 9, 51, 167)
+                    : const Color.fromARGB(255, 9, 51, 167).withOpacity(.2),
               ),
-            ),
-            Text(
-              newDate,
-              style: TextStyle(
-                fontSize: 17,
-                color: dayFormat == today
-                    ? Colors.white
-                    : myConstants.primaryColor,
-                fontWeight: FontWeight.w500,
+            ],
+          ),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Text(
+                dayName,
+                style: TextStyle(
+                  fontSize: 17,
+                  color: dayFormat == today
+                      ? Colors.white
+                      : myConstants.primaryColor,
+                  fontWeight: FontWeight.w500,
+                ),
               ),
-            ),
-          ],
+              Text(
+                newDate,
+                style: TextStyle(
+                  fontSize: 17,
+                  color: dayFormat == today
+                      ? Colors.white
+                      : myConstants.primaryColor,
+                  fontWeight: FontWeight.w500,
+                ),
+              ),
+            ],
+          ),
         ),
       );
     },
