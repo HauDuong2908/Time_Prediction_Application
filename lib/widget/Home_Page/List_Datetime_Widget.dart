@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 import 'package:weather_app/Models/constants.dart';
-// import 'package:weather_app/Provider/connect_api.dart';
 import 'package:weather_app/Provider/weather_provider.dart';
 
 class WeatherScreen extends StatelessWidget {

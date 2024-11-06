@@ -25,39 +25,3 @@ extension WeatherStateaExt on WeatherState {
     }
   }
 }
-
-
-// imageUrl = weatherStateName.toLowerCase();
-      // switch (imageUrl) {
-      //   case 'rain, overcast':
-      //     imageUrl = 'heavyrain';
-      //     break;
-      //   case 'rain, partially cloudy':
-      //     imageUrl = 'heavyrain';
-      //     break;
-      //   case 'overcast':
-      //   case 'partially cloudy':
-      //     imageUrl = 'heavycloud';
-      //     break;
-      //   case 'clear':
-      //     imageUrl = 'clear1';
-      //     break;
-      // }
-      // if (imageUrl.startsWith('rain')) {
-      //   imageUrl = 'heavyrain';
-      // } else {
-      //   switch (imageUrl) {
-      //     case 'overcast':
-      //     case 'partiallycloudy':
-      //       imageUrl = 'heavycloud';
-      //       break;
-      //     case 'clear':
-      //       imageUrl = 'clear1';
-      //       break;
-      //     case 'snow':
-      //       imageUrl = 'snow';
-      //       break;
-      //     default:
-      //       break;
-      //   }
-      // }

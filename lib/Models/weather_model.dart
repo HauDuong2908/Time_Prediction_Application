@@ -28,6 +28,7 @@ class DailyWeather {
   int maxTemp;
   int humidity;
   int winSpeed;
+  int precip;
 
   DailyWeather({
     required this.weatherStateName,
@@ -36,6 +37,7 @@ class DailyWeather {
     required this.humidity,
     required this.winSpeed,
     required this.datetime,
+    required this.precip,
   });
 
   factory DailyWeather.fromJson(Map<String, dynamic> json) {
@@ -47,6 +49,7 @@ class DailyWeather {
       temperature: (json['temp'] ?? 0).toInt(),
       maxTemp: (json['tempmax'] ?? 0).toInt(),
       humidity: (json['humidity'] ?? 0).toInt(),
+      precip: (json['precip'] ?? 0).toInt(),
       winSpeed: (json['windspeed'] ?? 0).toInt(),
       datetime: currentDate,
     );
