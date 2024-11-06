@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:weather_app/Models/constants.dart';
 import 'package:weather_app/Models/district.dart';
-import 'package:weather_app/widget/home_page.dart';
+import 'package:weather_app/widget/Home_Page/HomePage_Widget.dart';
 
 class Welcom extends StatefulWidget {
   const Welcom({super.key});

@@ -12,4 +12,10 @@ class Constants {
     end: Alignment.bottomCenter,
     // stops: [0.3, 0.7],
   );
+  final Shader linearGradient = const LinearGradient(
+    colors: <Color>[
+      Color.fromARGB(255, 71, 146, 221),
+      Color.fromARGB(255, 39, 101, 163),
+    ],
+  ).createShader(const Rect.fromLTWH(0.0, 0.0, 200.0, 70.0));
 }
