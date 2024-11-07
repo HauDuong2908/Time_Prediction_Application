@@ -1,34 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
-import 'package:provider/provider.dart';
 import 'package:weather_app/Models/constants.dart';
 import 'package:weather_app/Provider/weather_provider.dart';
 
-class WeatherScreen extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    final myConstants = Provider.of<Constants>(context, listen: false);
-
-    return Scaffold(
-      appBar: AppBar(
-        title: Text("Weather App"),
-      ),
-      body: Column(
-        children: [
-          Expanded(
-            child: Consumer<WeatherPro>(
-              builder: (context, weatherProvider, child) {
-                return listDateTime(weatherProvider, myConstants);
-              },
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-}
-
-ListView listDateTime(WeatherPro weatherProvider, Constants myConstants) {
+ListView listDateTime(WeatherPro weatherProvider, Constants myConstants,
+    {required Function(int) onDaySelected}) {
   return ListView.builder(
     scrollDirection: Axis.horizontal,
     itemCount: weatherProvider.consolidateWeatherList.length,
@@ -37,12 +13,10 @@ ListView listDateTime(WeatherPro weatherProvider, Constants myConstants) {
       final selectedDay =
           weatherProvider.consolidateWeatherList[index].datetime;
 
-      // Sử dụng DateFormat để phân tích selectedDay
       DateTime parseDate;
       DateFormat format = DateFormat('EEE MMM dd, yyyy');
       parseDate = format.parse(selectedDay);
 
-      // Định dạng selectedDay cho so sánh
       String dayFormat = DateFormat('yyyy-MM-dd').format(parseDate);
 
       String dayName = dayFormat == today

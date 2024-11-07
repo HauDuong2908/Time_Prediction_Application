@@ -19,10 +19,10 @@ class weather_items extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      width: 100,
-      height: 150,
+      width: 110,
+      height: 160,
       decoration: BoxDecoration(
-        color: Colors.blue,
+        color: color,
         borderRadius: BorderRadius.circular(50),
       ),
       child: Column(

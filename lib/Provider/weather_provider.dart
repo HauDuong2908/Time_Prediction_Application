@@ -23,7 +23,7 @@ class WeatherPro extends ChangeNotifier {
   int temperatures = 0;
   int maxTemps = 0;
   int humidities = 0;
-  int precips = 0;
+  int precipprob = 0;
   int winSpeeds = 0;
   String currentDates = 'Loading...';
 
@@ -62,7 +62,7 @@ class WeatherPro extends ChangeNotifier {
     temperatures = weather.temperature ?? 0;
     maxTemps = weather.maxTemp ?? 0;
     humidities = weather.humidity ?? 0;
-    precips = weather.precip ?? 0;
+    precipprob = weather.precipprob ?? 0;
     winSpeeds = weather.winSpeed ?? 0;
     currentDates = weather.datetime ?? 'N/A';
 
