@@ -42,6 +42,7 @@ dependencies:
   sqflite: ^2.4.0
   path_provider: ^2.1.5
   percent_indicator: ^4.2.3
+  dio: ^5.7.0
 
 dev_dependencies:
   flutter_test:
