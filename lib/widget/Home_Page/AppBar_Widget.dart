@@ -1,8 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:weather_app/Provider/weather_provider.dart';
+import 'package:weather_app/widget/welcom.dart';
 
-AppBar App_Bar(Size size, WeatherPro weatherProvider) {
+AppBar App_Bar(Size size, WeatherPro weatherProvider, BuildContext context) {
   return AppBar(
+    leading: BackButton(
+      onPressed: () {
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(builder: (context) => Welcom()),
+        );
+      },
+    ),
     automaticallyImplyLeading: false,
     centerTitle: false,
     titleSpacing: 0,
@@ -15,14 +24,6 @@ AppBar App_Bar(Size size, WeatherPro weatherProvider) {
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
-          ClipRRect(
-            borderRadius: const BorderRadius.all(Radius.circular(10)),
-            child: Image.asset(
-              'assets/profile.png',
-              width: 40,
-              height: 40,
-            ),
-          ),
           Row(
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
