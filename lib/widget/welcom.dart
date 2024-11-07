@@ -135,34 +135,34 @@ class _WelcomState extends State<Welcom> {
         },
       ),
       floatingActionButton: FloatingActionButton(
-        backgroundColor: myConstants.primaryColor,
-        child: const Icon(Icons.pin_drop),
-        onPressed: () {
-          if (selectedCities.isEmpty) {
-            showDialog(
-              context: context,
-              builder: (context) => AlertDialog(
-                title: const Text('Thông báo'),
-                content:
-                    const Text('Vui lòng chọn địa điểm trước khi tiếp tục.'),
-                actions: [
-                  TextButton(
-                    onPressed: () {
-                      Navigator.pop(context); // Đóng dialog
-                    },
-                    child: const Text('OK'),
-                  ),
-                ],
-              ),
-            );
-          } else {
+          backgroundColor: myConstants.primaryColor,
+          child: const Icon(Icons.pin_drop),
+          onPressed: () {
+            // if (selectedCities.isEmpty) {
+            //   showDialog(
+            //     context: context,
+            //     builder: (context) => AlertDialog(
+            //       title: const Text('Thông báo'),
+            //       content:
+            //           const Text('Vui lòng chọn địa điểm trước khi tiếp tục.'),
+            //       actions: [
+            //         TextButton(
+            //           onPressed: () {
+            //             Navigator.pop(context);
+            //           },
+            //           child: const Text('OK'),
+            //         ),
+            //       ],
+            //     ),
+            //   );
+            // } else {
             Navigator.pushReplacement(
               context,
               MaterialPageRoute(builder: (context) => HomePage()),
             );
           }
-        },
-      ),
+          // },
+          ),
     );
   }
 }

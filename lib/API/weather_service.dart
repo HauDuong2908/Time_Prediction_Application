@@ -10,8 +10,7 @@ class ApiService {
   final selectedCities = District.getSelectedCities();
 
   // List Data
-  List consolidateWeatherList = [];
-  List forecastDays = [];
+  List<DailyWeather> consolidateWeatherList = [];
 
   // API
   final String baseUrl =
@@ -19,7 +18,7 @@ class ApiService {
   final String apiKey = 'YCVZZSMMKNN59RN74H9VEQDH4';
 
   // Getter cho consolidateWeatherList
-  List get data => consolidateWeatherList;
+  List<DailyWeather> get data => consolidateWeatherList;
 
   Future<Weather?> fetchWeather(String location) async {
     final url = Uri.parse(

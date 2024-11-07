@@ -12,7 +12,7 @@ class WeatherPro extends ChangeNotifier {
   int selectedDayIndex = 0;
 
   final int selectedId = 0;
-  List listWeatherState = [];
+  List<String> listWeatherState = [];
 
   String location = '';
   String? errorMessage;
@@ -29,9 +29,8 @@ class WeatherPro extends ChangeNotifier {
 
   // List
   final List<String> cities = ['Đà Nẵng'];
-  List<dynamic> weatherList = [];
-  List<dynamic> consolidateWeatherList = [];
-  List<dynamic> forecastDays = [];
+  List<DailyWeather> weatherList = [];
+  List<DailyWeather> consolidateWeatherList = [];
 
   final selectedCities = District.getSelectedCities();
 
@@ -57,14 +56,14 @@ class WeatherPro extends ChangeNotifier {
     }
   }
 
-  void updateWeatherData(dynamic weather) {
-    weatherStateNames = weather.weatherStateName ?? 'N/A';
-    temperatures = weather.temperature ?? 0;
-    maxTemps = weather.maxTemp ?? 0;
-    humidities = weather.humidity ?? 0;
-    precipprob = weather.precipprob ?? 0;
-    winSpeeds = weather.winSpeed ?? 0;
-    currentDates = weather.datetime ?? 'N/A';
+  void updateWeatherData(DailyWeather weather) {
+    weatherStateNames = weather.weatherStateName;
+    temperatures = weather.temperature;
+    maxTemps = weather.maxTemp;
+    humidities = weather.humidity;
+    precipprob = weather.precipprob;
+    winSpeeds = weather.winSpeed;
+    currentDates = weather.datetime;
 
     listWeatherState = weatherStateNames.split(',');
     final listEnumState = listWeatherState
@@ -75,7 +74,7 @@ class WeatherPro extends ChangeNotifier {
     imageUrl = listEnumState.isNotEmpty ? listEnumState.first.image : '';
   }
 
-  Weather? getWeatherForSelectedDay() {
+  DailyWeather? getWeatherForSelectedDay() {
     if (consolidateWeatherList.isNotEmpty &&
         selectedDayIndex < consolidateWeatherList.length) {
       return consolidateWeatherList[selectedDayIndex];

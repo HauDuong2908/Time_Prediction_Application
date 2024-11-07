@@ -46,7 +46,7 @@ class _HomePage extends State<HomePage> {
     Size size = MediaQuery.of(context).size;
 
     return Scaffold(
-      appBar: App_Bar(size, weatherProvider),
+      appBar: App_Bar(size, weatherProvider, context),
       body: Column(
         children: [
           SizedBox(
@@ -79,7 +79,7 @@ class _HomePage extends State<HomePage> {
       WeatherPro weatherProvider, Constants myConstants, Size size, int index) {
     return SingleChildScrollView(
       child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
+        crossAxisAlignment: CrossAxisAlignment.center,
         children: [
           const SizedBox(height: 20),
           Center(
@@ -92,7 +92,7 @@ class _HomePage extends State<HomePage> {
           ),
           Row(
             mainAxisAlignment: MainAxisAlignment.center,
-            crossAxisAlignment: CrossAxisAlignment.start,
+            crossAxisAlignment: CrossAxisAlignment.center,
             children: [
               Text(
                 weatherProvider.temperatures.toString(),
