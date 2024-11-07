@@ -1,9 +1,9 @@
-import 'package:http/http.dart' as http;
+import 'package:dio/dio.dart';
 import 'package:weather_app/Models/district.dart';
-import 'dart:convert';
 import 'package:weather_app/Models/weather_model.dart';
 
 class ApiService {
+  final dio = Dio();
   // Location
   String location = '';
   final List<String> cities = ['Đà Nẵng'];
@@ -24,10 +24,10 @@ class ApiService {
   Future<Weather?> fetchWeather(String location) async {
     final url = Uri.parse(
         "$baseUrl/$location?unitGroup=metric&key=$apiKey&contentType=json");
-    final response = await http.get(url);
+    final response = await dio.get(url.toString());
 
     if (response.statusCode == 200) {
-      final Map<String, dynamic> data = jsonDecode(response.body);
+      final Map<String, dynamic> data = response.data;
       return Weather.fromJson(data);
     } else {
       print("Failed to load weather data. Status code: ${response.statusCode}");
