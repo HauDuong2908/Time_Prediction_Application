@@ -1,7 +1,8 @@
 enum WeatherState {
   rain('Rain'),
   partiallyCloudy('Partially cloudy'),
-  overcast('Overcast');
+  overcast('Overcast'),
+  clear('Clear');
 
   final String code;
   const WeatherState(this.code);
@@ -22,6 +23,8 @@ extension WeatherStateaExt on WeatherState {
         return 'lightcloud';
       case WeatherState.overcast:
         return 'snow';
+      case WeatherState.clear:
+        return 'clear1';
     }
   }
 }

@@ -17,7 +17,7 @@ class WeatherProvider extends ChangeNotifier {
   String imageUrl = '';
   bool isSaved = false;
 
-  final selectedCities = District.getSelectedCities();
+  final selectedCities = District.getSelectedCities(District as List<District>);
 
   // Weather State
   String weatherStateName = 'Loading...';

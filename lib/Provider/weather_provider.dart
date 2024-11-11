@@ -6,6 +6,7 @@ import 'package:weather_app/widget/weather_enum.dart';
 
 class WeatherPro extends ChangeNotifier {
   final ApiService weatherService = ApiService();
+  bool isLoading = true; // Trạng thái tải
   Weather? weatherData;
 
   String? selectedDate;
@@ -28,13 +29,15 @@ class WeatherPro extends ChangeNotifier {
   String currentDates = 'Loading...';
 
   // List
-  final List<String> cities = ['Đà Nẵng'];
+  final List<String> cities = ['Đà nẵng'];
+
   List<DailyWeather> weatherList = [];
   List<DailyWeather> consolidateWeatherList = [];
 
-  final selectedCities = District.getSelectedCities();
+  Future<void> loadLocation(String location) async {
+    isLoading = true;
+    notifyListeners();
 
-  Future<void> loadWeather(String location) async {
     final weatherAPI = await weatherService.fetchWeather(location);
 
     if (weatherAPI != null) {
@@ -52,8 +55,9 @@ class WeatherPro extends ChangeNotifier {
           consolidateWeatherList = consolidateWeatherlists;
         }
       }
-      notifyListeners();
     }
+    isLoading = false;
+    notifyListeners();
   }
 
   void updateWeatherData(DailyWeather weather) {
@@ -74,20 +78,26 @@ class WeatherPro extends ChangeNotifier {
     imageUrl = listEnumState.isNotEmpty ? listEnumState.first.image : '';
   }
 
-  DailyWeather? getWeatherForSelectedDay() {
-    if (consolidateWeatherList.isNotEmpty &&
-        selectedDayIndex < consolidateWeatherList.length) {
-      return consolidateWeatherList[selectedDayIndex];
-    }
-    return null;
-  }
-
-  Future<void> selectDay(int index) async {
+  void selectDay(int index) async {
     if (index < consolidateWeatherList.length) {
       selectedDayIndex = index;
       updateWeatherData(consolidateWeatherList[index]);
       selectedDate = consolidateWeatherList[index].datetime;
       notifyListeners();
+    }
+  }
+
+  Future<void> initializeAsyncData() async {
+    final selectedCities =
+        District.getSelectedCities(District as List<District>);
+
+    for (var city in selectedCities) {
+      cities.add(city.city);
+    }
+
+    if (cities.isNotEmpty) {
+      final citiesLocation = cities[0];
+      await loadLocation(citiesLocation);
     }
   }
 }
