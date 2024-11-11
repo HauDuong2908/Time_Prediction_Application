@@ -1,4 +1,3 @@
-// ignore_for_file: public_member_api_docs, sort_constructors_first
 class District {
   bool isSlected;
   final String city;
@@ -12,28 +11,19 @@ class District {
     required this.isDefault,
   });
 
-  static List<District> citiesList = [
-    District(
+  // Phương thức để tạo danh sách các đối tượng District từ dữ liệu JSON
+  static List<District> fromJsonList(List<Map<String, dynamic>> jsonList) {
+    return jsonList.map((locationJson) {
+      return District(
         isSlected: false,
-        city: 'Hà Nội',
+        city: locationJson['name'] ?? '',
         country: 'Việt Nam',
-        isDefault: false),
-    District(
-        isSlected: false,
-        city: 'Hồ CHí Minh',
-        country: 'Việt Nam',
-        isDefault: false),
-    District(
-        isSlected: false,
-        city: 'Quảng Nam',
-        country: 'Việt Nam',
-        isDefault: false),
-  ];
+        isDefault: false,
+      );
+    }).toList();
+  }
 
-  static List<District> getSelectedCities() {
-    List<District> selectedCities = District.citiesList;
-    return selectedCities
-        .where((district) => district.isSlected == true)
-        .toList();
+  static List<District> getSelectedCities(List<District> districts) {
+    return districts.where((district) => district.isSlected).toList();
   }
 }

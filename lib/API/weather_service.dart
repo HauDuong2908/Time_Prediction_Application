@@ -1,13 +1,10 @@
 import 'package:dio/dio.dart';
-import 'package:weather_app/Models/district.dart';
 import 'package:weather_app/Models/weather_model.dart';
 
 class ApiService {
   final dio = Dio();
   // Location
   String location = '';
-  final List<String> cities = ['Đà Nẵng'];
-  final selectedCities = District.getSelectedCities();
 
   // List Data
   List<DailyWeather> consolidateWeatherList = [];

@@ -47,7 +47,7 @@ AppBar App_Bar(Size size, WeatherPro weatherProvider, BuildContext context) {
                   }).toList(),
                   onChanged: (String? newValue) {
                     weatherProvider.location = newValue!;
-                    weatherProvider.loadWeather(newValue);
+                    weatherProvider.loadLocation(newValue);
                   },
                 ),
               ),
