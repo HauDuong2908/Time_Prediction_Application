@@ -14,6 +14,8 @@ class WeatherPro extends ChangeNotifier {
 
   final int selectedId = 0;
   List<String> listWeatherState = [];
+  List<District> citiesLocation = [];
+  List<District> selectedCities = [];
 
   String location = '';
   String? errorMessage;
@@ -29,11 +31,12 @@ class WeatherPro extends ChangeNotifier {
   String currentDates = 'Loading...';
 
   // List
-  final List<String> cities = [];
+  final List<String> citiesWeather = [];
 
   List<DailyWeather> weatherList = [];
   List<DailyWeather> consolidateWeatherList = [];
 
+  //Weather List.
   Future<void> loadLocation(String location) async {
     isLoading = true;
     notifyListeners();
@@ -78,6 +81,7 @@ class WeatherPro extends ChangeNotifier {
     imageUrl = listEnumState.isNotEmpty ? listEnumState.first.image : '';
   }
 
+  //Selected Day from Weather list.
   void selectDay(int index) async {
     if (index < consolidateWeatherList.length) {
       selectedDayIndex = index;
@@ -91,12 +95,53 @@ class WeatherPro extends ChangeNotifier {
     final selectedCities = District.getSelectedCities();
 
     for (var city in selectedCities) {
-      cities.add(city.city);
+      citiesWeather.add(city.city);
     }
 
-    if (cities.isNotEmpty) {
-      final citiesLocation = cities[0];
+    if (citiesWeather.isNotEmpty) {
+      final citiesLocation = citiesWeather[0];
       await loadLocation(citiesLocation);
+    }
+  }
+
+  //Locations List.
+  Future<void> loadDistricts() async {
+    await District.loadDistrictsFromJson();
+
+    citiesLocation = District.citiesList
+        .where((district) => district.isDefault == false)
+        .toList();
+
+    selectedCities = District.getSelectedCities();
+    notifyListeners();
+  }
+
+  void toggleCitySelection(District city) {
+    city.isSlected = !city.isSlected;
+    if (city.isSlected) {
+      selectedCities.add(city);
+    } else {
+      selectedCities.remove(city);
+    }
+    notifyListeners();
+  }
+
+  String addLocation(String location) {
+    final city = citiesLocation.firstWhere(
+      (district) => district.city.toLowerCase() == location.toLowerCase(),
+      orElse: () => District(
+          city: 'not found', isDefault: false, isSlected: false, country: ''),
+    );
+
+    if (city.city == 'not found') {
+      return "Không tìm thấy địa điểm";
+    } else if (!selectedCities.contains(city)) {
+      city.isSlected = true;
+      selectedCities.add(city);
+      notifyListeners();
+      return "Đã thêm địa điểm thành công";
+    } else {
+      return "Địa điểm đã tồn tại";
     }
   }
 }

@@ -34,12 +34,12 @@ AppBar App_Bar(Size size, WeatherPro weatherProvider, BuildContext context) {
               const SizedBox(width: 4),
               DropdownButtonHideUnderline(
                 child: DropdownButton<String>(
-                  value:
-                      weatherProvider.cities.contains(weatherProvider.location)
-                          ? weatherProvider.location
-                          : weatherProvider.cities[0],
+                  value: weatherProvider.citiesWeather
+                          .contains(weatherProvider.location)
+                      ? weatherProvider.location
+                      : weatherProvider.citiesWeather[0],
                   icon: const Icon(Icons.keyboard_arrow_down),
-                  items: weatherProvider.cities.map((String location) {
+                  items: weatherProvider.citiesWeather.map((String location) {
                     return DropdownMenuItem(
                       value: location,
                       child: Text(location),
