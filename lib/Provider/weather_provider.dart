@@ -29,7 +29,7 @@ class WeatherPro extends ChangeNotifier {
   String currentDates = 'Loading...';
 
   // List
-  final List<String> cities = ['Đà nẵng'];
+  final List<String> cities = [];
 
   List<DailyWeather> weatherList = [];
   List<DailyWeather> consolidateWeatherList = [];
@@ -88,8 +88,7 @@ class WeatherPro extends ChangeNotifier {
   }
 
   Future<void> initializeAsyncData() async {
-    final selectedCities =
-        District.getSelectedCities(District as List<District>);
+    final selectedCities = District.getSelectedCities();
 
     for (var city in selectedCities) {
       cities.add(city.city);

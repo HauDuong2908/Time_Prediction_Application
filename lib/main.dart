@@ -10,6 +10,8 @@ void main() {
     ],
     child: const MyApp(),
   ));
+
+  // WidgetsFlutterBinding.ensureInitialized();
 }
 
 class MyApp extends StatelessWidget {

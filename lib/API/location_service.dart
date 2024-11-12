@@ -1,20 +1,16 @@
 import 'dart:convert';
-
-import 'package:dio/dio.dart';
-import 'package:weather_app/Models/district.dart';
+import 'package:flutter/services.dart';
+import 'package:weather_app/Models/location_model.dart';
 
 class LocationService {
-  final dio = Dio();
-
-  Future<List<District>> fetchLocation() async {
-    final response = await dio.get("https://provinces.open-api.vn/api/");
-
-    if (response.statusCode == 200) {
-      List<Map<String, dynamic>> data =
-          List<Map<String, dynamic>>.from(jsonDecode(response.data));
-      return District.fromJsonList(data);
-    } else {
-      throw Exception('Error fetching locations');
-    }
+  @override
+  // ignore: override_on_non_overriding_member
+  Future<List<Location>?> loadDataLocation() async {
+    final String response = await rootBundle.loadString('json\cities.json');
+    final jsonBody = jsonDecode(response) as Map;
+    final locationList = jsonBody['Location'] as List;
+    List<Location> location =
+        locationList.map((location) => Location.fromJson(location)).toList();
+    return location;
   }
 }

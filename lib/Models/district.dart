@@ -1,3 +1,6 @@
+import 'dart:convert';
+import 'package:flutter/services.dart' show rootBundle;
+
 class District {
   bool isSlected;
   final String city;
@@ -11,19 +14,25 @@ class District {
     required this.isDefault,
   });
 
-  // Phương thức để tạo danh sách các đối tượng District từ dữ liệu JSON
-  static List<District> fromJsonList(List<Map<String, dynamic>> jsonList) {
-    return jsonList.map((locationJson) {
-      return District(
-        isSlected: false,
-        city: locationJson['name'] ?? '',
-        country: 'Việt Nam',
-        isDefault: false,
-      );
-    }).toList();
+  static List<District> citiesList = [];
+
+  factory District.fromJson(Map<String, dynamic> json) {
+    return District(
+      isSlected: false,
+      city: json['city'],
+      country: 'Việt Nam',
+      isDefault: false,
+    );
   }
 
-  static List<District> getSelectedCities(List<District> districts) {
-    return districts.where((district) => district.isSlected).toList();
+  static List<District> getSelectedCities() {
+    return citiesList.where((district) => district.isSlected).toList();
+  }
+
+  static Future<void> loadDistrictsFromJson() async {
+    final String response = await rootBundle.loadString('json/cities.json');
+    final List<dynamic> data = json.decode(response);
+
+    citiesList = data.map((item) => District.fromJson(item)).toList();
   }
 }

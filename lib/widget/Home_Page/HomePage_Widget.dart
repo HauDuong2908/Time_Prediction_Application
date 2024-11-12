@@ -26,8 +26,7 @@ class _HomePageState extends State<HomePage> {
         PageController(initialPage: weatherProvider.selectedDayIndex);
 
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      final selectedCities = District.getSelectedCities(
-          District as List<District>); // Pass the list of districts here
+      final selectedCities = District.getSelectedCities();
       if (selectedCities.isNotEmpty) {
         weatherProvider.initializeAsyncData();
       }
