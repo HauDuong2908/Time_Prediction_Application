@@ -10,7 +10,7 @@ class Location {
   });
 
   factory Location.fromJson(Map<String, dynamic> json) {
-    String name = (json['name'] ?? 'Unknown')
+    String name = (json['city'] ?? 'Unknown')
         .replaceAll(RegExp(r'\b(Thành Phố|Tỉnh)\b'), '')
         .trim();
 
