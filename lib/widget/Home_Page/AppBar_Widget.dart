@@ -37,7 +37,9 @@ AppBar App_Bar(Size size, WeatherPro weatherProvider, BuildContext context) {
                   value: weatherProvider.citiesWeather
                           .contains(weatherProvider.location)
                       ? weatherProvider.location
-                      : weatherProvider.citiesWeather[0],
+                      : weatherProvider.citiesWeather.isNotEmpty
+                          ? weatherProvider.citiesWeather[0]
+                          : null,
                   icon: const Icon(Icons.keyboard_arrow_down),
                   items: weatherProvider.citiesWeather.map((String location) {
                     return DropdownMenuItem(
@@ -46,8 +48,11 @@ AppBar App_Bar(Size size, WeatherPro weatherProvider, BuildContext context) {
                     );
                   }).toList(),
                   onChanged: (String? newValue) {
-                    weatherProvider.location = newValue!;
-                    weatherProvider.loadLocation(newValue);
+                    if (newValue != null &&
+                        newValue != weatherProvider.location) {
+                      weatherProvider.location = newValue;
+                      weatherProvider.loadLocation(newValue);
+                    }
                   },
                 ),
               ),

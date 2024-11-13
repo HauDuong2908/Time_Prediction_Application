@@ -110,6 +110,7 @@ class WeatherPro extends ChangeNotifier {
 
     citiesLocation = District.citiesList
         .where((district) => district.isDefault == false)
+        .toSet()
         .toList();
 
     selectedCities = District.getSelectedCities();
@@ -118,10 +119,10 @@ class WeatherPro extends ChangeNotifier {
 
   void toggleCitySelection(District city) {
     city.isSlected = !city.isSlected;
-    if (city.isSlected) {
+    if (city.isSlected && !selectedCities.contains(city)) {
       selectedCities.add(city);
-    } else {
-      selectedCities.remove(city);
+    } else if (!city.isSlected) {
+      selectedCities.removeWhere((c) => c.city == city.city);
     }
     notifyListeners();
   }
@@ -135,7 +136,7 @@ class WeatherPro extends ChangeNotifier {
 
     if (city.city == 'not found') {
       return "Không tìm thấy địa điểm";
-    } else if (!selectedCities.contains(city)) {
+    } else if (!selectedCities.any((c) => c.city == city.city)) {
       city.isSlected = true;
       selectedCities.add(city);
       notifyListeners();
@@ -143,5 +144,10 @@ class WeatherPro extends ChangeNotifier {
     } else {
       return "Địa điểm đã tồn tại";
     }
+  }
+
+  void ListCitiesLocation() {
+    citiesLocation = citiesLocation.where((city) => !city.isSlected).toList();
+    notifyListeners();
   }
 }
