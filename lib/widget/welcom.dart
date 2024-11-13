@@ -73,52 +73,56 @@ class _WelcomState extends State<Welcom> {
             itemCount: locationProvider.citiesLocation.length,
             itemBuilder: (BuildContext context, int index) {
               final city = locationProvider.citiesLocation[index];
-              return Container(
-                margin: const EdgeInsets.only(left: 10, top: 20, right: 10),
-                padding: const EdgeInsets.symmetric(horizontal: 20),
-                height: size.height * .08,
-                width: size.width,
-                decoration: BoxDecoration(
-                  border: city.isSlected
-                      ? Border.all(
-                          color: myConstants.secondaryColor.withOpacity(.6),
-                          width: 2,
-                        )
-                      : Border.all(color: Colors.white),
-                  borderRadius: const BorderRadius.all(Radius.circular(10)),
-                  boxShadow: [
-                    BoxShadow(
-                        color: myConstants.primaryColor.withOpacity(.2),
-                        spreadRadius: 5,
-                        blurRadius: 7,
-                        offset: const Offset(0, 3))
-                  ],
-                ),
-                child: Row(
-                  children: [
-                    GestureDetector(
-                      onTap: () {
-                        // Cập nhật trạng thái city và selectedCities trực tiếp qua provider
-                        locationProvider.toggleCitySelection(city);
-                      },
-                      child: Image.asset(
-                        city.isSlected
-                            ? 'assets/checked.png'
-                            : 'assets/unchecked.png',
-                        width: 30,
+              return GestureDetector(
+                onTap: () {
+                  locationProvider.toggleCitySelection(city);
+                },
+                child: Container(
+                  margin: const EdgeInsets.only(left: 10, top: 20, right: 10),
+                  padding: const EdgeInsets.symmetric(horizontal: 20),
+                  height: size.height * .08,
+                  width: size.width,
+                  decoration: BoxDecoration(
+                    border: city.isSlected
+                        ? Border.all(
+                            color: myConstants.secondaryColor.withOpacity(.6),
+                            width: 2,
+                          )
+                        : Border.all(color: Colors.white),
+                    borderRadius: const BorderRadius.all(Radius.circular(10)),
+                    boxShadow: [
+                      BoxShadow(
+                          color: myConstants.primaryColor.withOpacity(.2),
+                          spreadRadius: 5,
+                          blurRadius: 7,
+                          offset: const Offset(0, 3))
+                    ],
+                  ),
+                  child: Row(
+                    children: [
+                      GestureDetector(
+                        onTap: () {
+                          locationProvider.toggleCitySelection(city);
+                        },
+                        child: Image.asset(
+                          city.isSlected
+                              ? 'assets/checked.png'
+                              : 'assets/unchecked.png',
+                          width: 30,
+                        ),
                       ),
-                    ),
-                    const SizedBox(width: 10),
-                    Text(
-                      city.city,
-                      style: TextStyle(
-                        fontSize: 16,
-                        color: city.isSlected
-                            ? myConstants.primaryColor
-                            : Colors.black54,
-                      ),
-                    )
-                  ],
+                      const SizedBox(width: 10),
+                      Text(
+                        city.city,
+                        style: TextStyle(
+                          fontSize: 16,
+                          color: city.isSlected
+                              ? myConstants.primaryColor
+                              : Colors.black54,
+                        ),
+                      )
+                    ],
+                  ),
                 ),
               );
             },
@@ -127,6 +131,7 @@ class _WelcomState extends State<Welcom> {
               backgroundColor: myConstants.primaryColor,
               child: const Icon(Icons.pin_drop),
               onPressed: () {
+                locationProvider.ListCitiesLocation();
                 Navigator.pushReplacement(
                   context,
                   MaterialPageRoute(builder: (context) => HomePage()),
