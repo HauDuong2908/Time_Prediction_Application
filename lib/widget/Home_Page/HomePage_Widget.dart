@@ -7,6 +7,7 @@ import 'package:weather_app/Provider/weather_provider.dart';
 import 'package:weather_app/widget/Home_Page/AppBar_Widget.dart';
 import 'package:weather_app/widget/Home_Page/Home_Body.dart';
 import 'package:weather_app/widget/Home_Page/List_Datetime_Widget.dart';
+import 'package:weather_app/widget/Home_Page/Nav_Bar.dart';
 
 class HomePage extends StatefulWidget {
   HomePage({Key? key}) : super(key: key);
@@ -48,6 +49,7 @@ class _HomePageState extends State<HomePage> {
     return Stack(
       children: [
         Scaffold(
+          drawer: NavBar(),
           appBar: App_Bar(size, weatherProvider, context),
           body: weatherProvider.isLoading
               ? const Center(

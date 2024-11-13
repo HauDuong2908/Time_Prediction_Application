@@ -6,7 +6,7 @@ import 'package:weather_app/widget/weather_enum.dart';
 
 class WeatherPro extends ChangeNotifier {
   final ApiService weatherService = ApiService();
-  bool isLoading = true; // Trạng thái tải
+  bool isLoading = true;
   Weather? weatherData;
 
   String? selectedDate;
@@ -17,7 +17,7 @@ class WeatherPro extends ChangeNotifier {
   List<District> citiesLocation = [];
   List<District> selectedCities = [];
 
-  String location = '';
+  String location = ''; // The location to be displayed and selected
   String? errorMessage;
   String imageUrl = '';
   bool isSaved = false;
@@ -36,8 +36,17 @@ class WeatherPro extends ChangeNotifier {
   List<DailyWeather> weatherList = [];
   List<DailyWeather> consolidateWeatherList = [];
 
-  //Weather List.
+  // Setter for location with notifyListeners
+  void setLocation(String newLocation) {
+    if (location != newLocation) {
+      location = newLocation;
+      notifyListeners(); // Notify listeners about the change
+    }
+  }
+
+  //Load location (Weather Data) based on selected location
   Future<void> loadLocation(String location) async {
+    setLocation(location); // Use the setter to change location
     isLoading = true;
     notifyListeners();
 
@@ -63,6 +72,7 @@ class WeatherPro extends ChangeNotifier {
     notifyListeners();
   }
 
+  // Update weather data based on the selected day
   void updateWeatherData(DailyWeather weather) {
     weatherStateNames = weather.weatherStateName;
     temperatures = weather.temperature;
@@ -81,7 +91,7 @@ class WeatherPro extends ChangeNotifier {
     imageUrl = listEnumState.isNotEmpty ? listEnumState.first.image : '';
   }
 
-  //Selected Day from Weather list.
+  // Select a day from weather list
   void selectDay(int index) async {
     if (index < consolidateWeatherList.length) {
       selectedDayIndex = index;
@@ -91,6 +101,7 @@ class WeatherPro extends ChangeNotifier {
     }
   }
 
+  // Initialize async data for cities and weather
   Future<void> initializeAsyncData() async {
     final selectedCities = District.getSelectedCities();
 
@@ -104,7 +115,7 @@ class WeatherPro extends ChangeNotifier {
     }
   }
 
-  //Locations List.
+  // Load district data
   Future<void> loadDistricts() async {
     await District.loadDistrictsFromJson();
 
@@ -117,6 +128,7 @@ class WeatherPro extends ChangeNotifier {
     notifyListeners();
   }
 
+  // Toggle selection of a city
   void toggleCitySelection(District city) {
     city.isSlected = !city.isSlected;
     if (city.isSlected && !selectedCities.contains(city)) {
@@ -127,6 +139,7 @@ class WeatherPro extends ChangeNotifier {
     notifyListeners();
   }
 
+  // Add a new location to the selected cities
   String addLocation(String location) {
     final city = citiesLocation.firstWhere(
       (district) => district.city.toLowerCase() == location.toLowerCase(),
@@ -144,10 +157,5 @@ class WeatherPro extends ChangeNotifier {
     } else {
       return "Địa điểm đã tồn tại";
     }
-  }
-
-  void ListCitiesLocation() {
-    citiesLocation = citiesLocation.where((city) => !city.isSlected).toList();
-    notifyListeners();
   }
 }

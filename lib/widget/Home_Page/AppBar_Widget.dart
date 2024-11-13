@@ -4,15 +4,7 @@ import 'package:weather_app/widget/welcom.dart';
 
 AppBar App_Bar(Size size, WeatherPro weatherProvider, BuildContext context) {
   return AppBar(
-    leading: BackButton(
-      onPressed: () {
-        Navigator.pushReplacement(
-          context,
-          MaterialPageRoute(builder: (context) => Welcom()),
-        );
-      },
-    ),
-    automaticallyImplyLeading: false,
+    automaticallyImplyLeading: true,
     centerTitle: false,
     titleSpacing: 0,
     backgroundColor: Colors.blue,
@@ -21,7 +13,7 @@ AppBar App_Bar(Size size, WeatherPro weatherProvider, BuildContext context) {
       padding: const EdgeInsets.symmetric(horizontal: 20),
       width: size.width,
       child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        mainAxisAlignment: MainAxisAlignment.center,
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
           Row(
@@ -50,16 +42,32 @@ AppBar App_Bar(Size size, WeatherPro weatherProvider, BuildContext context) {
                   onChanged: (String? newValue) {
                     if (newValue != null &&
                         newValue != weatherProvider.location) {
-                      weatherProvider.location = newValue;
-                      weatherProvider.loadLocation(newValue);
+                      weatherProvider
+                          .setLocation(newValue); // Use the setLocation method
+                      weatherProvider
+                          .loadLocation(newValue); // Load weather data
                     }
                   },
                 ),
               ),
             ],
-          )
+          ),
         ],
       ),
     ),
+    actions: [
+      Padding(
+        padding: const EdgeInsets.only(right: 8.0),
+        child: IconButton(
+          onPressed: () {
+            Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) => const Welcom()),
+            );
+          },
+          icon: const Icon(Icons.location_city),
+        ),
+      ),
+    ],
   );
 }
