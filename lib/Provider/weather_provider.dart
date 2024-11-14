@@ -17,7 +17,7 @@ class WeatherPro extends ChangeNotifier {
   List<District> citiesLocation = [];
   List<District> selectedCities = [];
 
-  String location = ''; // The location to be displayed and selected
+  String location = '';
   String? errorMessage;
   String imageUrl = '';
   bool isSaved = false;
@@ -30,23 +30,20 @@ class WeatherPro extends ChangeNotifier {
   int winSpeeds = 0;
   String currentDates = 'Loading...';
 
-  // List
   List<String> citiesWeather = [];
 
   List<DailyWeather> weatherList = [];
   List<DailyWeather> consolidateWeatherList = [];
 
-  // Setter for location with notifyListeners
   void setLocation(String newLocation) {
     if (location != newLocation) {
       location = newLocation;
-      notifyListeners(); // Notify listeners about the change
+      notifyListeners();
     }
   }
 
-  //Load location (Weather Data) based on selected location
   Future<void> loadLocation(String location) async {
-    setLocation(location); // Use the setter to change location
+    setLocation(location);
     isLoading = true;
     notifyListeners();
 
@@ -72,7 +69,6 @@ class WeatherPro extends ChangeNotifier {
     notifyListeners();
   }
 
-  // Update weather data based on the selected day
   void updateWeatherData(DailyWeather weather) {
     weatherStateNames = weather.weatherStateName;
     temperatures = weather.temperature;
@@ -91,7 +87,6 @@ class WeatherPro extends ChangeNotifier {
     imageUrl = listEnumState.isNotEmpty ? listEnumState.first.image : '';
   }
 
-  // Select a day from weather list
   void selectDay(int index) async {
     if (index < consolidateWeatherList.length) {
       selectedDayIndex = index;
@@ -101,7 +96,6 @@ class WeatherPro extends ChangeNotifier {
     }
   }
 
-  // Initialize async data for cities and weather
   Future<void> initializeAsyncData() async {
     final selectedCities = District.getSelectedCities();
 
@@ -109,7 +103,6 @@ class WeatherPro extends ChangeNotifier {
       citiesWeather.add(city.city);
     }
 
-    // Loại bỏ trùng lặp trong danh sách citiesWeather
     citiesWeather = citiesWeather.toSet().toList();
 
     if (citiesWeather.isNotEmpty) {
@@ -118,7 +111,6 @@ class WeatherPro extends ChangeNotifier {
     }
   }
 
-  // Load district data
   Future<void> loadDistricts() async {
     await District.loadDistrictsFromJson();
 
@@ -131,7 +123,6 @@ class WeatherPro extends ChangeNotifier {
     notifyListeners();
   }
 
-  // Toggle selection of a city
   void toggleCitySelection(District city) {
     city.isSlected = !city.isSlected;
     if (city.isSlected && !selectedCities.contains(city)) {
@@ -142,7 +133,6 @@ class WeatherPro extends ChangeNotifier {
     notifyListeners();
   }
 
-  // Add a new location to the selected cities
   String addLocation(String location) {
     final city = citiesLocation.firstWhere(
       (district) => district.city.toLowerCase() == location.toLowerCase(),

@@ -34,5 +34,6 @@ class District {
     final List<dynamic> data = json.decode(response);
 
     citiesList = data.map((item) => District.fromJson(item)).toList();
+    citiesList.sort((a, b) => a.city.compareTo(b.city));
   }
 }
