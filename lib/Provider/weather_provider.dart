@@ -31,7 +31,7 @@ class WeatherPro extends ChangeNotifier {
   String currentDates = 'Loading...';
 
   // List
-  final List<String> citiesWeather = [];
+  List<String> citiesWeather = [];
 
   List<DailyWeather> weatherList = [];
   List<DailyWeather> consolidateWeatherList = [];
@@ -108,6 +108,9 @@ class WeatherPro extends ChangeNotifier {
     for (var city in selectedCities) {
       citiesWeather.add(city.city);
     }
+
+    // Loại bỏ trùng lặp trong danh sách citiesWeather
+    citiesWeather = citiesWeather.toSet().toList();
 
     if (citiesWeather.isNotEmpty) {
       final citiesLocation = citiesWeather[0];
