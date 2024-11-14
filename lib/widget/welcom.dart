@@ -29,7 +29,6 @@ class _WelcomState extends State<Welcom> {
   Widget build(BuildContext context) {
     return Consumer<WeatherPro>(
       builder: (context, locationProvider, child) {
-        // Hàm để xử lý việc thêm địa điểm vào danh sách
         void handleLocation(String location) async {
           final resultLocation = await locationProvider.addLocation(location);
           ScaffoldMessenger.of(context).showSnackBar(
