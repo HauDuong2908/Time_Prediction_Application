@@ -6,7 +6,7 @@ import 'package:weather_app/Provider/weather_provider.dart';
 import 'package:weather_app/widget/Home_Page/HomePage_Widget.dart';
 
 class Welcom extends StatefulWidget {
-  const Welcom({super.key});
+  const Welcom({Key? key}) : super(key: key);
 
   @override
   State<Welcom> createState() => _WelcomState();
@@ -73,10 +73,7 @@ class _WelcomState extends State<Welcom> {
           ),
           body: ListView.builder(
             physics: const BouncingScrollPhysics(),
-            itemCount: locationProvider.citiesLocation
-                .where((city) => city.isDefault == false)
-                .toList()
-                .length,
+            itemCount: locationProvider.citiesLocation.length,
             itemBuilder: (BuildContext context, int index) {
               final List<District> city = locationProvider.citiesLocation
                   .where((city) => city.isDefault == false)
@@ -88,12 +85,9 @@ class _WelcomState extends State<Welcom> {
                 height: size.height * .08,
                 width: size.width,
                 decoration: BoxDecoration(
-                  border: city[index].isSlected
-                      ? Border.all(
-                          color: myConstants.secondaryColor.withOpacity(.6),
-                          width: 2,
-                        )
-                      : Border.all(color: Colors.white),
+                  color: city[index].isSlected == true
+                      ? Colors.amber
+                      : const Color.fromARGB(255, 255, 255, 255),
                   borderRadius: const BorderRadius.all(Radius.circular(10)),
                   boxShadow: [
                     BoxShadow(
@@ -104,32 +98,24 @@ class _WelcomState extends State<Welcom> {
                     ),
                   ],
                 ),
-                child: Row(
-                  children: [
-                    GestureDetector(
-                      onTap: () {
-                        setState(() {
-                          locationProvider.toggleCitySelection(city[index]);
-                        });
-                      },
-                      child: Image.asset(
-                        city[index].isSlected
-                            ? 'assets/checked.png'
-                            : 'assets/unchecked.png',
-                        width: 30,
+                child: InkWell(
+                  onTap: () {
+                    locationProvider.toggleCitySelection(city[index]);
+                  },
+                  child: Row(
+                    children: [
+                      const SizedBox(width: 10),
+                      Text(
+                        city[index].city,
+                        style: TextStyle(
+                          fontSize: 16,
+                          color: city[index].isSlected == true
+                              ? myConstants.primaryColor
+                              : Colors.black54,
+                        ),
                       ),
-                    ),
-                    const SizedBox(width: 10),
-                    Text(
-                      city[index].city,
-                      style: TextStyle(
-                        fontSize: 16,
-                        color: city[index].isSlected
-                            ? myConstants.primaryColor
-                            : Colors.black54,
-                      ),
-                    ),
-                  ],
+                    ],
+                  ),
                 ),
               );
             },
@@ -137,8 +123,8 @@ class _WelcomState extends State<Welcom> {
           floatingActionButton: FloatingActionButton(
             backgroundColor: myConstants.primaryColor,
             child: const Icon(Icons.pin_drop),
-            onPressed: () async {
-              Navigator.pushReplacement(
+            onPressed: () {
+              Navigator.push(
                 context,
                 MaterialPageRoute(builder: (context) => HomePage()),
               );

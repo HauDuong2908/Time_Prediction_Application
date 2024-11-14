@@ -5,7 +5,7 @@ import 'package:weather_app/widget/welcom.dart';
 AppBar App_Bar(Size size, WeatherPro weatherProvider, BuildContext context) {
   return AppBar(
     automaticallyImplyLeading: true,
-    centerTitle: false,
+    centerTitle: true,
     titleSpacing: 0,
     backgroundColor: Colors.blue,
     elevation: 0.0,
@@ -25,31 +25,28 @@ AppBar App_Bar(Size size, WeatherPro weatherProvider, BuildContext context) {
               ),
               const SizedBox(width: 4),
               DropdownButtonHideUnderline(
-                child: DropdownButton<String>(
-                  value: weatherProvider.citiesWeather
-                          .contains(weatherProvider.location)
-                      ? weatherProvider.location
-                      : weatherProvider.citiesWeather.isNotEmpty
-                          ? weatherProvider.citiesWeather[0]
-                          : null,
-                  icon: const Icon(Icons.keyboard_arrow_down),
-                  items: weatherProvider.citiesWeather.map((String location) {
-                    return DropdownMenuItem(
-                      value: location,
-                      child: Text(location),
-                    );
-                  }).toList(),
-                  onChanged: (String? newValue) {
-                    if (newValue != null &&
-                        newValue != weatherProvider.location) {
-                      weatherProvider
-                          .setLocation(newValue); // Use the setLocation method
-                      weatherProvider
-                          .loadLocation(newValue); // Load weather data
-                    }
-                  },
-                ),
-              ),
+                  child: DropdownButton<String>(
+                value: weatherProvider.citiesWeather
+                        .contains(weatherProvider.location)
+                    ? weatherProvider.location
+                    : weatherProvider.citiesWeather.isNotEmpty
+                        ? weatherProvider.citiesWeather[0]
+                        : null,
+                icon: const Icon(Icons.keyboard_arrow_down),
+                items: weatherProvider.citiesWeather.map((String location) {
+                  return DropdownMenuItem(
+                    value: location,
+                    child: Text(location),
+                  );
+                }).toList(),
+                onChanged: (String? newValue) {
+                  if (newValue != null &&
+                      newValue != weatherProvider.location) {
+                    weatherProvider.setLocation(newValue);
+                    weatherProvider.loadLocation(newValue);
+                  }
+                },
+              )),
             ],
           ),
         ],
