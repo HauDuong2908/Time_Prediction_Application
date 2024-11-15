@@ -1,10 +1,16 @@
-import 'package:dropdown_button2/dropdown_button2.dart';
+// ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
+
 import 'package:weather_app/Provider/weather_provider.dart';
-import 'package:weather_app/widget/welcom.dart';
+import 'package:weather_app/widget/Home_Page/DropDown.dart';
 
 AppBar App_Bar(Size size, WeatherPro weatherProvider, BuildContext context) {
-  final TextEditingController textEditingController = TextEditingController();
+  List<String> listlocation = weatherProvider.citiesWeather;
+
+  // Kiểm tra nếu listlocation có ít nhất một item
+  String? initialLocation = listlocation.isNotEmpty ? listlocation[0] : null;
+
   return AppBar(
     automaticallyImplyLeading: true,
     centerTitle: true,
@@ -18,56 +24,19 @@ AppBar App_Bar(Size size, WeatherPro weatherProvider, BuildContext context) {
         mainAxisAlignment: MainAxisAlignment.center,
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
-          Expanded(
-            child: Row(
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
-                Image.asset(
-                  'assets/pin.png',
-                  width: 20,
-                ),
-                const SizedBox(width: 4),
-                DropdownButtonHideUnderline(
-                  child: DropdownButton2<String>(
-                    isExpanded: true,
-                    items: weatherProvider.citiesWeather.map((String location) {
-                      return DropdownMenuItem(
-                        value: location,
-                        child: Text(location),
-                      );
-                    }).toList(),
-                    value: weatherProvider.citiesWeather
-                            .contains(weatherProvider.location)
-                        ? weatherProvider.location
-                        : weatherProvider.citiesWeather.isNotEmpty
-                            ? weatherProvider.citiesWeather[0]
-                            : null,
-                    onChanged: (String? newValue) {
-                      if (newValue != null &&
-                          newValue != weatherProvider.location) {
-                        weatherProvider.setLocation(newValue);
-                        weatherProvider.loadLocation(newValue);
-                      }
-                    },
-                    buttonStyleData: const ButtonStyleData(
-                      padding: EdgeInsets.symmetric(horizontal: 16),
-                      height: 40,
-                      width: 200,
-                    ),
-                    dropdownStyleData: const DropdownStyleData(
-                      maxHeight: 200,
-                    ),
-                    menuItemStyleData: const MenuItemStyleData(
-                      height: 40,
-                    ),
-                    onMenuStateChange: (isOpen) {
-                      if (!isOpen) {
-                        textEditingController.clear();
-                      }
-                    },
-                  ),
-                ),
-              ],
+          SizedBox(
+            width: size.width * 0.6,
+            height: 50,
+            child: locationDropDown(
+              list: listlocation,
+              initial: initialLocation,
+              text: 'Selected',
+              onchange: (String? newValue) {
+                if (newValue != null && newValue != weatherProvider.location) {
+                  weatherProvider.setLocation(newValue);
+                  weatherProvider.loadLocation(newValue);
+                }
+              },
             ),
           ),
         ],
@@ -77,12 +46,7 @@ AppBar App_Bar(Size size, WeatherPro weatherProvider, BuildContext context) {
       Padding(
         padding: const EdgeInsets.only(right: 8.0),
         child: IconButton(
-          onPressed: () {
-            Navigator.pop(
-              context,
-              MaterialPageRoute(builder: (context) => const Welcom()),
-            );
-          },
+          onPressed: () => context.pop('/welcome'),
           icon: const Icon(Icons.location_city),
         ),
       ),

@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 import 'package:weather_app/Models/constants.dart';
 import 'package:weather_app/Models/district.dart';
 import 'package:weather_app/Provider/weather_provider.dart';
-import 'package:weather_app/widget/Home_Page/HomePage_Widget.dart';
 
 class Welcom extends StatefulWidget {
   const Welcom({Key? key}) : super(key: key);
@@ -122,12 +122,7 @@ class _WelcomState extends State<Welcom> {
           floatingActionButton: FloatingActionButton(
             backgroundColor: myConstants.primaryColor,
             child: const Icon(Icons.pin_drop),
-            onPressed: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(builder: (context) => HomePage()),
-              );
-            },
+            onPressed: () => context.push('/homePage'),
           ),
         );
       },

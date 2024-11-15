@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:weather_app/Provider/weather_provider.dart';
-import 'widget/get_started.dart';
+import 'package:weather_app/Go_Route.dart';
 
 void main() {
   runApp(MultiProvider(
@@ -17,14 +17,8 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'Weather App',
-      home: getStarted(),
-      theme: ThemeData(
-        primarySwatch: Colors.blue,
-        visualDensity: VisualDensity.adaptivePlatformDensity,
-      ),
-      debugShowCheckedModeBanner: false,
+    return MaterialApp.router(
+      routerConfig: RouterWidget.router,
     );
   }
 }

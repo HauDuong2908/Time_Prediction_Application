@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:weather_app/Models/constants.dart';
 // import 'package:weather_app/widget/home1.dart';
-import 'package:weather_app/widget/welcom.dart';
 
 // ignore: must_be_immutable, camel_case_types
 class getStarted extends StatelessWidget {
@@ -30,14 +30,7 @@ class getStarted extends StatelessWidget {
               height: 30,
             ),
             GestureDetector(
-              onTap: () {
-                Navigator.pushReplacement(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => Welcom(),
-                  ),
-                );
-              },
+              onTap: () => context.go('/welcome'),
               child: Container(
                 height: 50,
                 width: size.width * 0.7,
