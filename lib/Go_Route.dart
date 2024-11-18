@@ -5,10 +5,10 @@ import 'package:weather_app/widget/welcom.dart';
 
 class RouterWidget {
   static final GoRouter router = GoRouter(
-    initialLocation: '/',
+    initialLocation: '/get-started',
     routes: [
       GoRoute(
-        path: '/getStarted',
+        path: '/get-started',
         builder: (context, state) => getStarted(),
       ),
       GoRoute(
@@ -16,7 +16,7 @@ class RouterWidget {
         builder: (context, state) => Welcom(),
       ),
       GoRoute(
-        path: '/homePage',
+        path: '/home-page',
         builder: (context, state) => HomePage(),
       ),
     ],
