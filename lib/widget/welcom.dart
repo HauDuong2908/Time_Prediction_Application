@@ -122,7 +122,7 @@ class _WelcomState extends State<Welcom> {
           floatingActionButton: FloatingActionButton(
             backgroundColor: myConstants.primaryColor,
             child: const Icon(Icons.pin_drop),
-            onPressed: () => context.push('/homePage'),
+            onPressed: () => context.push('/home-page'),
           ),
         );
       },
