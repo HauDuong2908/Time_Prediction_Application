@@ -1,17 +1,15 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-
+import 'package:weather_app/Models/dropdown.dart';
 import 'package:weather_app/Provider/weather_provider.dart';
-
 import 'package:weather_app/Dropdown_button/custom_dropdown.dart';
-// import 'package:weather_app/widget/Home_Page/DropDown.dart';
 
 AppBar App_Bar(Size size, WeatherPro weatherProvider, BuildContext context) {
-  List<String> listlocation = weatherProvider.citiesWeather;
+  final List<String> listlocation = weatherProvider.citiesWeather;
   final TextEditingController _controller = TextEditingController();
-
-  // String? initialLocation = listlocation.isNotEmpty ? listlocation[0] : null;
+  final ValueNotifier<String> hintTextNotifier =
+      ValueNotifier<String>(weatherProvider.location);
 
   return AppBar(
     automaticallyImplyLeading: true,
@@ -29,16 +27,31 @@ AppBar App_Bar(Size size, WeatherPro weatherProvider, BuildContext context) {
           SizedBox(
             width: size.width * 0.6,
             height: 50,
-            child: CustomDropdown(
-              items: listlocation,
-              controller: _controller,
-              // initial: initialLocation,
-              hintText: 'Selected',
-              onChanged: (String? newValue) {
-                if (newValue != null && newValue != weatherProvider.location) {
-                  weatherProvider.setLocation(newValue);
-                  weatherProvider.loadLocation(newValue);
-                }
+            child: ValueListenableBuilder<String>(
+              valueListenable: hintTextNotifier,
+              builder: (context, hintText, _) {
+                Dropdown dropdown = Dropdown(
+                  items: listlocation,
+                  controller: _controller,
+                  hintText: hintText,
+                  hintStyle: const TextStyle(
+                      color: Color.fromARGB(255, 247, 242, 242)),
+                  selectedStyle: const TextStyle(color: Colors.black),
+                  borderRadius: BorderRadius.circular(8),
+                  fielIcon: const Icon(Icons.arrow_drop_down),
+                );
+
+                return CustomDropdown(
+                  dropdownModel: dropdown,
+                  onChanged: (String? newValue) {
+                    if (newValue != null &&
+                        newValue != weatherProvider.location) {
+                      hintTextNotifier.value = newValue;
+                      weatherProvider.setLocation(newValue);
+                      weatherProvider.loadLocation(newValue);
+                    }
+                  },
+                );
               },
             ),
           ),
