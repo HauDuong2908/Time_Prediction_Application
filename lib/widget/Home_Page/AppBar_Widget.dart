@@ -1,10 +1,8 @@
-// ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:weather_app/Models/dropdown.dart';
 import 'package:weather_app/Provider/initializeAsyncData.dart';
 import 'package:weather_app/Provider/location_provider.dart';
-// import 'package:weather_app/Provider/weather_provider.dart';
 import 'package:weather_app/Dropdown_button/custom_dropdown.dart';
 
 AppBar App_Bar(Size size, LocationProvider locationProvider,
