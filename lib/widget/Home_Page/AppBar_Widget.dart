@@ -2,14 +2,17 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:weather_app/Models/dropdown.dart';
-import 'package:weather_app/Provider/weather_provider.dart';
+import 'package:weather_app/Provider/initializeAsyncData.dart';
+import 'package:weather_app/Provider/location_provider.dart';
+// import 'package:weather_app/Provider/weather_provider.dart';
 import 'package:weather_app/Dropdown_button/custom_dropdown.dart';
 
-AppBar App_Bar(Size size, WeatherPro weatherProvider, BuildContext context) {
-  final List<String> listlocation = weatherProvider.citiesWeather;
+AppBar App_Bar(Size size, LocationProvider locationProvider,
+    BuildContext context, Initializeasyncdata inits) {
+  final List<String> listlocation = inits.citiesWeather;
   final TextEditingController _controller = TextEditingController();
   final ValueNotifier<String> hintTextNotifier =
-      ValueNotifier<String>(weatherProvider.location);
+      ValueNotifier<String>(locationProvider.location);
 
   return AppBar(
     automaticallyImplyLeading: true,
@@ -45,10 +48,10 @@ AppBar App_Bar(Size size, WeatherPro weatherProvider, BuildContext context) {
                   dropdownModel: dropdown,
                   onChanged: (String? newValue) {
                     if (newValue != null &&
-                        newValue != weatherProvider.location) {
+                        newValue != locationProvider.location) {
                       hintTextNotifier.value = newValue;
-                      weatherProvider.setLocation(newValue);
-                      weatherProvider.loadLocation(newValue);
+                      locationProvider.setLocation(newValue);
+                      locationProvider.loadLocation(context, newValue);
                     }
                   },
                 );

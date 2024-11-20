@@ -3,6 +3,8 @@ import 'package:provider/provider.dart';
 
 import 'package:weather_app/Models/constants.dart';
 import 'package:weather_app/Models/district.dart';
+import 'package:weather_app/Provider/initializeAsyncData.dart';
+import 'package:weather_app/Provider/location_provider.dart';
 import 'package:weather_app/Provider/weather_provider.dart';
 import 'package:weather_app/widget/Home_Page/AppBar_Widget.dart';
 import 'package:weather_app/widget/Home_Page/Home_Body.dart';
@@ -22,14 +24,14 @@ class _HomePageState extends State<HomePage> {
   @override
   void initState() {
     super.initState();
-    final weatherProvider = Provider.of<WeatherPro>(context, listen: false);
-    _pageController =
-        PageController(initialPage: weatherProvider.selectedDayIndex);
+    final initState = Provider.of<Initializeasyncdata>(context, listen: false);
+    final weather = Provider.of<WeatherPro>(context, listen: false);
+    _pageController = PageController(initialPage: weather.selectedDayIndex);
 
     WidgetsBinding.instance.addPostFrameCallback((_) {
       final selectedCities = District.getSelectedCities();
       if (selectedCities.isNotEmpty) {
-        weatherProvider.initializeAsyncData();
+        initState.initializeAsyncData(context);
       }
     });
   }
@@ -43,15 +45,17 @@ class _HomePageState extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
     Constants myConstants = Constants();
+    final locationProvider = Provider.of<LocationProvider>(context);
     final weatherProvider = Provider.of<WeatherPro>(context);
+    final inits = Provider.of<Initializeasyncdata>(context);
     Size size = MediaQuery.of(context).size;
 
     return Stack(
       children: [
         Scaffold(
           drawer: NavBar(),
-          appBar: App_Bar(size, weatherProvider, context),
-          body: weatherProvider.isLoading
+          appBar: App_Bar(size, locationProvider, context, inits),
+          body: locationProvider.isLoading
               ? const Center(
                   child: CircularProgressIndicator(),
                 )

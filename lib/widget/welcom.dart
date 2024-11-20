@@ -3,7 +3,7 @@ import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 import 'package:weather_app/Models/constants.dart';
 import 'package:weather_app/Models/district.dart';
-import 'package:weather_app/Provider/weather_provider.dart';
+import 'package:weather_app/Provider/cities_provider.dart';
 
 class Welcom extends StatefulWidget {
   const Welcom({Key? key}) : super(key: key);
@@ -20,17 +20,18 @@ class _WelcomState extends State<Welcom> {
   void initState() {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((_) async {
-      final locationProvider = Provider.of<WeatherPro>(context, listen: false);
-      await locationProvider.loadDistricts();
+      final citiesProvider =
+          Provider.of<CitiesProvider>(context, listen: false);
+      await citiesProvider.loadDistricts();
     });
   }
 
   @override
   Widget build(BuildContext context) {
-    return Consumer<WeatherPro>(
-      builder: (context, locationProvider, child) {
+    return Consumer<CitiesProvider>(
+      builder: (context, citiesProvider, child) {
         void handleLocation(String location) async {
-          final resultLocation = await locationProvider.addLocation(location);
+          final resultLocation = await citiesProvider.addLocation(location);
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(content: Text(resultLocation)),
           );
@@ -72,9 +73,9 @@ class _WelcomState extends State<Welcom> {
           ),
           body: ListView.builder(
             physics: const BouncingScrollPhysics(),
-            itemCount: locationProvider.citiesLocation.length,
+            itemCount: citiesProvider.citiesLocation.length,
             itemBuilder: (BuildContext context, int index) {
-              final List<District> city = locationProvider.citiesLocation
+              final List<District> city = citiesProvider.citiesLocation
                   .where((city) => city.isDefault == false)
                   .toList();
 
@@ -99,7 +100,7 @@ class _WelcomState extends State<Welcom> {
                 ),
                 child: InkWell(
                   onTap: () {
-                    locationProvider.toggleCitySelection(city[index]);
+                    citiesProvider.toggleCitySelection(city[index]);
                   },
                   child: Row(
                     children: [
