@@ -44,26 +44,4 @@ class WeatherPro extends ChangeNotifier {
       notifyListeners();
     }
   }
-
-  // final LayerLink _layerLink = LayerLink();
-  // final ScrollController _controller = ScrollController();
-  // OverlayEntry? _overlayEntry;
-  // bool _isOpen = false;
-
-  // void _toggleDropdown(BuildContext context, Function(String) onItemSelected, List<String> items) {
-  //   if (_isOpen) {
-  //     _overlayEntry?.remove();
-  //       _isOpen = false;
-  //   } else {
-  //     _overlayEntry = _createOverlayEntry(context, onItemSelected, items);
-  //     Overlay.of(context).insert(_overlayEntry!);
-  //       _isOpen = true;
-  //   }
-  //   notifyListeners();
-  // }
-
-  //  OverlayEntry _createOverlayEntry(BuildContext context, Function(String) onItemSelected, List<String> items) {
-  //   RenderBox renderBox = context.findRenderObject() as RenderBox;
-  //   var size = renderBox.size;
-  //   var offset = renderBox.localToGlobal(Offset.zero);
 }

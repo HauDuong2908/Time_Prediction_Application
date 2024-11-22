@@ -47,6 +47,7 @@ dependencies:
   dropdown_button2: ^2.3.9
   animated_custom_dropdown: 3.1.1
   go_router: ^14.6.0
+  get_it: ^8.0.2
 
 dev_dependencies:
   flutter_test:
