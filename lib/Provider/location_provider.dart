@@ -1,12 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:weather_app/API/weather_service.dart';
+import 'package:weather_app/Repo/WeatherRepo.dart';
 import 'package:weather_app/Models/weather_model.dart';
 import 'package:weather_app/Provider/weather_provider.dart';
 
 class LocationProvider extends ChangeNotifier {
   Weather? weatherData;
-  final ApiService weatherService = ApiService();
+
+  final WeatherRepo _weatherrepo;
+  LocationProvider(this._weatherrepo);
+
   String location = '';
   bool isLoading = true;
   List<DailyWeather> weatherList = [];
@@ -25,7 +28,7 @@ class LocationProvider extends ChangeNotifier {
     isLoading = true;
     notifyListeners();
 
-    final weatherAPI = await weatherService.fetchWeather(location);
+    final weatherAPI = await _weatherrepo.fetchWeather("location");
 
     if (weatherAPI != null) {
       weatherData = weatherAPI;
