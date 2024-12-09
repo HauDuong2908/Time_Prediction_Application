@@ -3,7 +3,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:weather_app/Repo/WeatherRepo.dart';
-import 'package:weather_app/API/locator.dart';
+import 'package:weather_app/locator.dart';
 import 'package:weather_app/Provider/cities_provider.dart';
 import 'package:weather_app/Provider/dropdown_provider.dart';
 import 'package:weather_app/Provider/initializeAsyncData.dart';
@@ -32,6 +32,7 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp.router(
+      debugShowCheckedModeBanner: false,
       routerConfig: RouterWidget.router,
     );
   }
